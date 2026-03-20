@@ -405,7 +405,15 @@ footer p { font-size:12px; color:rgba(255,255,255,0.3); }
 const promptDB = [
   {
     id:'presup_1', dept:'presupuesto',
-    tags:['analizar','retroalimentacion','retroalimentación','feedback','costos','excel','presupuesto','desviacion','desviación','partida','costo'],
+    tags:[
+      'analizar','analiza','análisis','revisar','revisa','revision','revisión','checar','checa',
+      'retroalimentacion','retroalimentación','feedback','retro','informe','reporte','reportar',
+      'costos','costo','presupuesto','presupuestos','partida','partidas','obra','gasto','gastos',
+      'desviacion','desviación','desviaciones','variacion','variación','diferencia','sobrecosto',
+      'departamento de costos','depto costos','area de costos','control de costos',
+      'excel','hoja','datos','tabla','archivo','control','seguimiento','monitoreo',
+      'comparar','comparativo','cuanto me estoy gastando','como voy','como esta','estado'
+    ],
     title:'Análisis y Retroalimentación de Presupuesto de Obra',
     prompt:`Actúa como un experto en control de costos de construcción con 15 años de experiencia. Analiza el siguiente presupuesto de obra (datos adjuntos en Excel) y genera una retroalimentación ejecutiva completa para el departamento de costos que incluya:
 
@@ -421,7 +429,12 @@ Usa semáforo visual (🟢🟡🔴) para cada partida. Formato listo para presen
   },
   {
     id:'presup_2', dept:'presupuesto',
-    tags:['cotizacion','cotización','comparar','proveedores','compras','precio','mejor','elegir','selección','proveedor'],
+    tags:[
+      'cotizacion','cotización','cotizaciones','cotizar','comparar','comparativo','comparacion',
+      'proveedores','proveedor','compras','comprar','precio','precios','mejor precio','elegir',
+      'seleccion','selección','oferta','ofertas','licitacion','licitación','propuesta','propuestas',
+      'cual conviene','quien conviene','mejor opcion','mejor opción'
+    ],
     title:'Comparativo de Cotizaciones con Análisis de Riesgo',
     prompt:`Eres un jefe de compras senior en una empresa constructora. Tengo las siguientes cotizaciones para [INSUMO/SERVICIO — pega los datos aquí].
 
@@ -438,7 +451,12 @@ Formato tabla Excel + párrafo ejecutivo de decisión.`
   },
   {
     id:'presup_3', dept:'presupuesto',
-    tags:['apu','precio unitario','calculo','cálculo','concepto','material','mano de obra','rendimiento','elaborar'],
+    tags:[
+      'apu','precio unitario','precios unitarios','analisis de precio','análisis de precio',
+      'calculo','cálculo','calcular','concepto','conceptos','material','materiales',
+      'mano de obra','rendimiento','rendimientos','elaborar','elabora','hacer apu',
+      'cuanto cuesta','cuanto vale','costo unitario','desglose','explosión de insumos','explosion'
+    ],
     title:'Generador de Análisis de Precios Unitarios (APU)',
     prompt:`Actúa como presupuestador de obra certificado. Para el concepto: [NOMBRE DEL CONCEPTO], con las especificaciones: [ESPECIFICACIONES].
 
@@ -457,7 +475,12 @@ Muestra las fórmulas utilizadas. Formato tabla lista para Excel.`
   },
   {
     id:'presup_4', dept:'presupuesto',
-    tags:['flujo','caja','proyectar','proyección','mensual','financiero','efectivo','deficit','déficit','capital'],
+    tags:[
+      'flujo','caja','flujo de caja','flujo de efectivo','proyectar','proyeccion','proyección',
+      'mensual','financiero','efectivo','deficit','déficit','capital','dinero','liquidez',
+      'cuando necesito dinero','cuando necesito pagar','cobros','pagos','estimaciones',
+      'cuando cobro','cuando pago','saldo','caja negativa','necesito financiamiento'
+    ],
     title:'Proyección de Flujo de Caja de Obra',
     prompt:`Como director financiero de proyectos, con la siguiente información: [PRESUPUESTO POR PARTIDA], [PROGRAMA DE OBRA EN SEMANAS/MESES], [CONDICIONES DE PAGO AL CLIENTE], [CONDICIONES PAGO A PROVEEDORES].
 
@@ -474,7 +497,12 @@ Formato tabla mensual lista para Excel con fórmulas explícitas.`
   },
   {
     id:'presup_5', dept:'presupuesto',
-    tags:['rentabilidad','margen','roi','retorno','ganancia','utilidad','proyecto','resultado','real','presupuestado'],
+    tags:[
+      'rentabilidad','rentable','margen','margenes','márgenes','roi','retorno','ganancia','ganancias',
+      'utilidad','utilidades','proyecto','resultado','resultados','real','presupuestado',
+      'cuanto gane','cuanto gané','cuanto gano','cuanto perdi','perdí','perder','sí fue rentable',
+      'fue rentable','como me fue','como quedé','como quedo','resultado final','cierre de proyecto'
+    ],
     title:'Análisis de Rentabilidad Real vs Presupuestada',
     prompt:`Eres CFO de una empresa constructora. Con los datos: [INGRESOS REALES vs PRESUPUESTADOS], [COSTOS DIRECTOS REALES vs PRESUPUESTADOS por partida], [COSTOS INDIRECTOS], [PLAZO REAL vs PROGRAMADO].
 
@@ -492,7 +520,11 @@ Formato dashboard financiero para presentación a socios.`
   },
   {
     id:'logistica_1', dept:'logistica',
-    tags:['orden de compra','orden','compra','proveedor','requisicion','requisición','material','pedido','generar'],
+    tags:[
+      'orden de compra','orden','compra','compras','proveedor','requisicion','requisición',
+      'material','materiales','pedido','pedir','generar orden','hacer orden','solicitar',
+      'necesito materiales','faltan materiales','requerir','requerimiento'
+    ],
     title:'Generador de Orden de Compra Profesional',
     prompt:`Actúa como jefe de compras de empresa constructora. Con la requisición: [LISTA DE MATERIALES CON CANTIDADES Y ESPECIFICACIONES].
 
@@ -510,7 +542,11 @@ Formato PDF-ready con totales e IVA desglosado.`
   },
   {
     id:'logistica_2', dept:'logistica',
-    tags:['evaluar','evaluacion','evaluación','ranking','calificar','calificacion','desempeño','proveedor','proveedores'],
+    tags:[
+      'evaluar','evaluacion','evaluación','evalua','ranking','rank','calificar','calificacion',
+      'calificación','desempeño','proveedor','proveedores','quien es mejor','mejor proveedor',
+      'confiable','cumple','no cumple','mal proveedor','buen proveedor','historial'
+    ],
     title:'Evaluación y Ranking de Proveedores',
     prompt:`Eres especialista en gestión de proveedores. Con los datos: [NOMBRE PROVEEDOR], [HISTORIAL ENTREGAS: fechas prometidas vs reales], [INCIDENCIAS DE CALIDAD], [PRECIOS VS MERCADO], [SERVICIO POSTVENTA].
 
@@ -660,20 +696,46 @@ function autoResize(el) {
   el.style.height = Math.min(el.scrollHeight, 110) + 'px';
 }
 
+// ─── SMART MATCHING v2 ───
 function matchPrompts(userText) {
-  const text = userText.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-  return promptDB
-    .map(p => {
-      if (currentDept !== 'todos' && p.dept !== currentDept) return {...p, score: -1};
-      const score = p.tags.reduce((acc, tag) => {
-        const t = tag.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-        return acc + (text.includes(t) ? 2 : 0);
-      }, 0);
-      return {...p, score};
-    })
-    .filter(p => p.score > 0)
-    .sort((a, b) => b.score - a.score)
-    .slice(0, 2);
+  const norm = t => t.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
+  const text = norm(userText);
+  const words = text.split(/\s+/).filter(w => w.length > 2);
+
+  const scored = promptDB.map(p => {
+    const deptBonus = currentDept === 'todos' ? 1 : (p.dept === currentDept ? 2 : 0.1);
+
+    // Exact tag match (highest priority)
+    const exactScore = p.tags.reduce((acc, tag) => {
+      const t = norm(tag);
+      if (text.includes(t)) return acc + (t.includes(' ') ? 4 : 2); // multi-word tags worth more
+      return acc;
+    }, 0);
+
+    // Word-level partial match
+    const wordScore = words.reduce((acc, w) => {
+      if (w.length < 3) return acc;
+      const inTag = p.tags.some(tag => norm(tag).includes(w));
+      const tagInWord = p.tags.some(tag => w.includes(norm(tag)) && norm(tag).length > 3);
+      return acc + (inTag ? 1.5 : 0) + (tagInWord ? 1 : 0);
+    }, 0);
+
+    // Title match bonus
+    const titleScore = norm(p.title).split(' ').filter(w => w.length > 3)
+      .reduce((acc, w) => acc + (text.includes(w) ? 2 : 0), 0);
+
+    const total = (exactScore + wordScore + titleScore) * deptBonus;
+    return {...p, score: total};
+  }).sort((a, b) => b.score - a.score);
+
+  // Always return best match — never leave user without a prompt
+  const positive = scored.filter(p => p.score > 0);
+  if (positive.length === 0) {
+    // Fallback: return top prompts for selected dept
+    const deptFallback = promptDB.filter(p => currentDept === 'todos' || p.dept === currentDept);
+    return (deptFallback.length > 0 ? deptFallback : promptDB).slice(0, 1);
+  }
+  return positive.slice(0, 2);
 }
 
 async function sendMessage() {
@@ -692,26 +754,38 @@ async function sendMessage() {
   try {
     const matched = matchPrompts(text);
 
-    const systemPrompt = `Eres el asistente de inteligencia artificial de Grupo Senda, empresa constructora. Tu único rol:
-1. Entender con empatía lo que el empleado necesita (contexto de construcción)
-2. Confirmar brevemente qué entendiste (1-2 líneas, tono cálido y profesional)
-3. Indicar el nombre del prompt más adecuado de la base de conocimiento
-4. Explicar en 2 líneas POR QUÉ ese prompt es perfecto para su caso
-5. Dar 1-2 tips de personalización específicos para su situación
+    // Send ALL prompts as context so Claude can pick the best one intelligently
+    const allPromptsContext = promptDB.map(p =>
+      `ID: ${p.id} | Depto: ${p.dept} | Título: "${p.title}" | Tags: ${p.tags.join(', ')}`
+    ).join('\n');
 
-REGLAS:
-- Siempre en español
-- Tono: profesional pero cercano, como colega experto
-- NO generes el prompt completo (el sistema lo muestra automáticamente)
-- SÍ menciona el NOMBRE EXACTO del prompt recomendado en negrita
-- Máximo 100 palabras en tu respuesta
-- Si el usuario menciona datos específicos (nombre proyecto, departamento), úsalos`;
+    const systemPrompt = `Eres el asistente de inteligencia artificial de Grupo Senda, empresa constructora líder. Tu misión es ayudar a los empleados a encontrar el prompt perfecto para su tarea.
 
-    const userMsg = `El empleado de Grupo Senda solicita: "${text}"
+BASE DE CONOCIMIENTO COMPLETA (todos los prompts disponibles):
+${allPromptsContext}
 
-${matched.length > 0 ? `Prompts más relevantes identificados:\n${matched.map(p => `- "${p.title}" (depto: ${p.dept})`).join('\n')}` : 'No hay coincidencia exacta, sugiere el más cercano.'}
+CÓMO RESPONDER:
+1. Saluda brevemente y confirma con tus propias palabras lo que el empleado necesita hacer (1 línea)
+2. Indica el prompt más adecuado mencionando su TÍTULO EXACTO en negritas
+3. Explica en 1-2 líneas por qué ese prompt es ideal para su caso específico
+4. Da 1 tip concreto de cómo personalizar el prompt (qué datos sustituir primero)
 
-Responde: confirma lo que entendiste, recomienda el prompt por nombre, explica por qué, da tips de personalización. Máximo 100 palabras.`;
+REGLAS ESTRICTAS:
+- SIEMPRE responde en español, sin excepción
+- Tono cálido y profesional, como un colega experto en construcción
+- NUNCA digas que no puedes ayudar — siempre hay un prompt útil
+- NUNCA generes el prompt completo en tu respuesta (el sistema lo muestra automáticamente)
+- Máximo 3 párrafos cortos
+- Si el empleado menciona un proyecto o datos específicos, úsalos en tu respuesta
+- Si la solicitud es ambigua, elige el prompt más probable para construcción y menciónalo`;
+
+    const userMsg = `Empleado de Grupo Senda escribe: "${text}"
+
+Departamento seleccionado: ${currentDept === 'todos' ? 'Sin filtro (todos)' : currentDept}
+
+Prompts pre-seleccionados por el sistema: ${matched.map(p => `"${p.title}"`).join(', ')}
+
+Analiza la solicitud, confirma tu comprensión, recomienda el mejor prompt por título exacto y da un tip de personalización.`;
 
     const response = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
@@ -723,25 +797,55 @@ Responde: confirma lo que entendiste, recomienda el prompt por nombre, explica p
       },
       body: JSON.stringify({
         model: "claude-sonnet-4-20250514",
-        max_tokens: 1000,
+        max_tokens: 600,
         system: systemPrompt,
         messages: [{role: "user", content: userMsg}]
       })
     });
 
     const data = await response.json();
+
+    // Handle API errors gracefully with detail
+    if (data.error) {
+      removeTyping(typingId);
+      const errMsg = data.error.type === 'authentication_error'
+        ? 'Error de API Key. Verifica que la key sea correcta en el código.'
+        : data.error.type === 'rate_limit_error'
+        ? 'Límite de uso alcanzado. Intenta en unos segundos.'
+        : `Error: ${data.error.message}`;
+      appendMsg('ai', errMsg);
+      isLoading = false;
+      document.getElementById('sendBtn').disabled = false;
+      return;
+    }
+
     const aiText = data.content?.map(c => c.text || '').join('') || 'Lo siento, hubo un problema. Intenta de nuevo.';
 
+    // Smart re-match: if Claude mentions a different prompt title, show that one
+    const finalMatched = rematchByTitle(aiText, matched);
+
     removeTyping(typingId);
-    renderAIMsg(aiText, matched);
+    renderAIMsg(aiText, finalMatched);
 
   } catch (err) {
     removeTyping(typingId);
-    appendMsg('ai', 'Hubo un error al conectar. Por favor intenta de nuevo.');
+    appendMsg('ai', 'Error de conexión. Verifica tu internet e intenta de nuevo.');
   }
 
   isLoading = false;
   document.getElementById('sendBtn').disabled = false;
+}
+
+// If Claude's response mentions a prompt title not in matched, swap it in
+function rematchByTitle(aiText, matched) {
+  const norm = t => t.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  const aiNorm = norm(aiText);
+  for (const p of promptDB) {
+    if (norm(p.title).split(' ').filter(w => w.length > 4).every(w => aiNorm.includes(w))) {
+      if (!matched.find(m => m.id === p.id)) return [p, ...matched].slice(0, 2);
+    }
+  }
+  return matched;
 }
 
 function renderAIMsg(aiText, matched) {
