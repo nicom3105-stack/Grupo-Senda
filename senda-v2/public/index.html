@@ -277,7 +277,7 @@ footer p { font-size:12px; color:rgba(255,255,255,0.3); }
   <div style="position:relative;z-index:2">
     <div class="hero-tag">✦ Asistente Inteligente</div>
     <h1>Describe lo que<br/>necesitas y la <em>IA</em><br/>te guía al instante</h1>
-    <p class="hero-sub">Escribe en lenguaje natural lo que quieres lograr. El asistente identifica tu necesidad y te entrega el prompt perfecto para Claude for Excel.</p>
+    <p class="hero-sub">Escribe en lenguaje natural lo que quieres lograr. El asistente identifica tu necesidad y te entrega el prompt perfecto para usar con el asistente de IA.</p>
   </div>
   <div class="hero-chat-widget">
     <div class="widget-bar">
@@ -286,7 +286,7 @@ footer p { font-size:12px; color:rgba(255,255,255,0.3); }
     </div>
     <div class="widget-preview">
       <div class="bub u">"Analízame este excel para hacer una retroalimentación al departamento de costos"</div>
-      <div class="bub a"><strong>¡Perfecto!</strong> Encontré el prompt ideal: <em>Análisis y Retroalimentación de Presupuesto de Obra</em>. Incluye desviaciones por partida, semáforo de alertas y proyección a terminación. Cópialo y pégalo en Claude for Excel 👇</div>
+      <div class="bub a"><strong>¡Entendido!</strong> Aquí te genero un prompt poderoso para analizar ese presupuesto con IA. Incluirá desviaciones por partida, semáforo de alertas y proyección a terminación — ajustado al contexto panameño 👇</div>
     </div>
   </div>
 </section>
@@ -314,10 +314,13 @@ footer p { font-size:12px; color:rgba(255,255,255,0.3); }
         <div class="msg ai">
           <span class="msg-sender">Asistente Senda</span>
           <div class="msg-bubble">
-            ¡Hola! Soy tu asistente de Grupo Senda. 👋<br/><br/>
-            Cuéntame <strong>qué necesitas hacer</strong> con tus propias palabras. Por ejemplo:<br/>
-            <em>"Analízame este excel para hacer retroalimentación al departamento de costos"</em><br/><br/>
-            Identifico cuál es el mejor prompt para tu caso y te lo entrego listo para usar en <strong>Claude for Excel</strong>.
+            ¡Hola! Soy el asistente de IA de <strong>Grupo Senda Panamá</strong>. 👋<br/><br/>
+            Puedo ayudarte de dos formas:<br/>
+            • <strong>Responder preguntas</strong> sobre construcción, costos, procesos o normativa panameña<br/>
+            • <strong>Generar el mejor prompt posible</strong> para que lo uses en tu asistente de IA<br/><br/>
+            Solo dime qué necesitas — en tus propias palabras. Por ejemplo:<br/>
+            <em>"Analízame este presupuesto para retroalimentación al departamento de costos"</em><br/>
+            <em>"¿Cuáles son los requisitos del MIVIOT para un proyecto residencial?"</em>
           </div>
         </div>
       </div>
@@ -363,29 +366,29 @@ footer p { font-size:12px; color:rgba(255,255,255,0.3); }
   <div class="examples-inner">
     <h3>Frases que puedes usar</h3>
     <div class="examples-grid">
-      <div class="example-chip" onclick="fillAndSend('Analízame este excel para hacer una retroalimentación al departamento de costos')">
-        <strong>💰 Presupuesto</strong>"Analízame este excel para hacer retroalimentación al departamento de costos"
+      <div class="example-chip" onclick="fillAndSend('Analízame este presupuesto de obra y dame retroalimentación para el departamento de costos')">
+        <strong>💰 Presupuesto</strong>"Analízame este presupuesto y dame retroalimentación para costos"
       </div>
-      <div class="example-chip" onclick="fillAndSend('Necesito evaluar a mis proveedores y hacer un ranking de los mejores')">
-        <strong>🚚 Compras</strong>"Necesito evaluar a mis proveedores y hacer un ranking de los mejores"
+      <div class="example-chip" onclick="fillAndSend('¿Cuáles son los requisitos del MIVIOT para tramitar una licencia de construcción en Panamá?')">
+        <strong>🏗️ Pregunta</strong>"¿Cuáles son los requisitos del MIVIOT para una licencia de construcción?"
       </div>
-      <div class="example-chip" onclick="fillAndSend('Quiero revisar si hay inconsistencias entre mis planos de arquitectura y estructural')">
-        <strong>🏗️ Arquitectura</strong>"Quiero revisar inconsistencias entre mis planos de arquitectura y estructural"
+      <div class="example-chip" onclick="fillAndSend('Necesito comparar cotizaciones de varios proveedores para materiales de construcción')">
+        <strong>🚚 Compras</strong>"Necesito comparar cotizaciones de proveedores de materiales"
       </div>
-      <div class="example-chip" onclick="fillAndSend('Necesito crear una descripción de puesto para un residente de obra')">
-        <strong>👥 RRHH</strong>"Necesito crear una descripción de puesto para un residente de obra"
+      <div class="example-chip" onclick="fillAndSend('¿Cuánto cuesta aproximadamente construir por metro cuadrado en Panamá?')">
+        <strong>💡 Pregunta</strong>"¿Cuánto cuesta construir por metro cuadrado en Panamá?"
       </div>
-      <div class="example-chip" onclick="fillAndSend('Necesito calcular cuánto material necesito para la obra con base en mis cantidades')">
-        <strong>📦 Logística</strong>"Necesito calcular cuánto material necesito para la obra"
+      <div class="example-chip" onclick="fillAndSend('Quiero proyectar el flujo de caja de mi proyecto de construcción para los próximos 6 meses')">
+        <strong>📊 Finanzas</strong>"Quiero proyectar el flujo de caja de mi proyecto"
       </div>
-      <div class="example-chip" onclick="fillAndSend('Quiero saber la rentabilidad real de mi proyecto comparado con lo presupuestado')">
-        <strong>📊 Finanzas</strong>"Quiero saber la rentabilidad real vs lo presupuestado"
+      <div class="example-chip" onclick="fillAndSend('Necesito hacer el reporte semanal de avance de obra para presentar al cliente')">
+        <strong>🦺 Supervisión</strong>"Necesito el reporte semanal de avance para el cliente"
       </div>
-      <div class="example-chip" onclick="fillAndSend('Necesito generar la bitácora de obra del día de hoy con todas las actividades')">
-        <strong>🦺 Supervisión</strong>"Necesito generar la bitácora de obra del día de hoy"
+      <div class="example-chip" onclick="fillAndSend('¿Qué normas COPANIT aplican para instalaciones eléctricas en edificios en Panamá?')">
+        <strong>⚡ Pregunta</strong>"¿Qué normas COPANIT aplican para instalaciones eléctricas?"
       </div>
-      <div class="example-chip" onclick="fillAndSend('Quiero revisar un contrato con proveedor para identificar riesgos legales')">
-        <strong>⚖️ Legal</strong>"Quiero revisar un contrato con proveedor para identificar riesgos"
+      <div class="example-chip" onclick="fillAndSend('Quiero revisar un contrato de subcontrato para identificar riesgos y cláusulas problemáticas')">
+        <strong>⚖️ Legal</strong>"Revisar contrato de subcontrato para identificar riesgos"
       </div>
     </div>
   </div>
@@ -1150,37 +1153,56 @@ async function sendMessage() {
   try {
     const deptContext = currentDept === 'todos' ? 'cualquier departamento' : currentDept;
 
-    const systemPrompt = `Eres el asistente de IA de Grupo Senda, empresa constructora. Tu trabajo es generar el MEJOR PROMPT POSIBLE para que el empleado lo use en Claude for Excel o Claude.ai.
+    const systemPrompt = `Eres el asistente de inteligencia artificial de Grupo Senda, empresa constructora panameña. Eres experto en construcción en Panamá: conoces el mercado local, las normas del MIVIOT, el Reglamento Nacional de Construcción de Panamá, proveedores panameños, costos en balboas/dólares, y la realidad del sector construcción en el país.
 
-INSTRUCCIONES ESTRICTAS:
-1. Lee con atención lo que necesita el empleado.
-2. Escribe una respuesta corta (2-3 líneas máximo) en español confirmando lo que entendiste y diciéndole que aquí está su prompt.
-3. Genera UN PROMPT PODEROSO, específico y completo para su petición exacta. El prompt debe:
-   - Asignar un ROL EXPERTO específico a Claude (ej: "Actúa como director de costos de construcción con 20 años de experiencia...")
-   - Incluir CONTEXTO de empresa constructora
-   - Pedir un OUTPUT ESTRUCTURADO con numeración clara
-   - Usar términos técnicos del sector construcción en México
-   - Incluir PLACEHOLDERS en [CORCHETES] para que el empleado sustituya sus datos reales
-   - Ser lo suficientemente detallado para obtener una respuesta excepcional
-   - Terminar indicando el formato de salida ideal (tabla Excel, reporte ejecutivo, etc.)
+TU PERSONALIDAD:
+- Eres como un colega experto — cercano, directo y profesional
+- Respondes siempre en español (con términos panameños cuando aplica)
+- Eres útil para responder preguntas, pero tu ESPECIALIDAD es generar prompts poderosos
 
-FORMATO DE RESPUESTA OBLIGATORIO:
-[Tu mensaje corto de 2-3 líneas confirmando la petición]
+CÓMO MANEJAR CADA TIPO DE MENSAJE:
+
+1. SI EL EMPLEADO PIDE UN PROMPT O TAREA ESPECÍFICA:
+   - Responde en 2-3 líneas confirmando lo que entendiste
+   - Genera el mejor prompt posible (ver formato abajo)
+   - USA el formato ---PROMPT--- / ---FIN---
+
+2. SI EL EMPLEADO HACE UNA PREGUNTA GENERAL DE CONSTRUCCIÓN:
+   - Responde la pregunta de forma concisa y útil (máximo 4-5 líneas)
+   - Al final, ofrece generar un prompt relacionado. Ej: "¿Quieres que te genere un prompt para analizar esto en detalle?"
+   - NO uses el formato ---PROMPT--- a menos que el empleado confirme que quiere el prompt
+
+3. SI EL EMPLEADO SALUDA O DA CONTEXTO:
+   - Saluda brevemente y pregunta en qué le puedes ayudar hoy
+   - NO uses el formato ---PROMPT---
+
+CUANDO GENERES UN PROMPT, debe:
+- Asignar un ROL EXPERTO específico (ej: "Actúa como director de costos de construcción con 20 años de experiencia en Panamá...")
+- Mencionar el contexto de Grupo Senda y Panamá cuando sea relevante
+- Usar normativa panameña: MIVIOT, MICI, Ley 41, normas COPANIT, precios en dólares
+- Pedir OUTPUT ESTRUCTURADO con numeración clara
+- Incluir PLACEHOLDERS en [CORCHETES] para datos reales
+- Tener entre 150-400 palabras
+- Terminar indicando el formato ideal (tabla, reporte ejecutivo, etc.)
+
+FORMATO CUANDO GENERES PROMPT:
+[Mensaje corto de 2-3 líneas]
 
 ---PROMPT---
 [El prompt completo aquí]
 ---FIN---
 
-REGLAS:
+REGLAS ABSOLUTAS:
 - Siempre en español
-- El prompt debe ser diferente y único para cada petición
-- Nunca uses prompts genéricos — personaliza siempre al contexto específico que describe el empleado
-- Si el empleado da detalles (nombre de proyecto, tipo de obra, etc.) incorpóralos al prompt
-- El prompt debe tener mínimo 150 palabras y máximo 400 palabras`;
+- NUNCA menciones que eres Claude, ni Claude.ai, ni Anthropic, ni ningún modelo de IA específico
+- Si alguien pregunta qué IA eres o quién te creó, di que eres el Asistente IA de Grupo Senda, desarrollado internamente para la empresa
+- Nunca digas que no puedes ayudar
+- Si no entiendes bien la petición, haz UNA pregunta de clarificación antes de generar el prompt
+- Cada prompt debe ser único y personalizado — nunca genérico`;
 
-    const userMsg = `Empleado del departamento de ${deptContext} de Grupo Senda escribe: "${text}"
+    const userMsg = `Empleado del departamento de ${deptContext} de Grupo Senda (empresa constructora en Panamá) escribe: "${text}"
 
-Genera el mejor prompt posible para esta petición específica.`;
+Analiza si es una pregunta, un saludo, o una petición de prompt/tarea y responde según tus instrucciones.`;
 
     const response = await fetch("/api/chat", {
       method: "POST",
