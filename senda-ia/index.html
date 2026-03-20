@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Grupo Senda — Centro IA</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --navy: #0a2472;
+  --navy-mid: #1a3a8f;
+  --navy-light: #e8edf8;
+  --white: #ffffff;
+  --off-white: #f8f9fc;
+  --light-gray: #eaedf5;
+  --mid-gray: #b0b8d0;
+  --text: #1a1f36;
+  --text-soft: #5a6282;
+  --accent: #c8a96e;
+  --accent-light: #f0e6d0;
+  --green: #16a34a;
+  --shadow: 0 4px 24px rgba(10,36,114,0.10);
+  --shadow-lg: 0 12px 48px rgba(10,36,114,0.16);
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'DM Sans',sans-serif; background:var(--white); color:var(--text); overflow-x:hidden; }
+
+header {
+  position:fixed; top:0; left:0; right:0; z-index:200;
+  background:rgba(255,255,255,0.97);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--light-gray);
+  height:66px;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0 48px;
+}
+.logo-wrap { display:flex; align-items:center; gap:4px; }
+.logo-svg-wrap { height:36px; display:flex; align-items:center; }
+.logo-divider { width:1px; height:28px; background:var(--light-gray); margin:0 16px; }
+.logo-tagline { font-size:11px; color:var(--mid-gray); letter-spacing:2px; text-transform:uppercase; font-weight:500; }
+nav { display:flex; gap:28px; align-items:center; }
+nav a { font-size:13px; color:var(--text-soft); text-decoration:none; font-weight:500; transition:color 0.2s; }
+nav a:hover { color:var(--navy); }
+
+.hero {
+  margin-top:66px;
+  background:linear-gradient(135deg, #061a5a 0%, #0a2472 60%, #1a3a8f 100%);
+  padding:72px 64px;
+  display:grid; grid-template-columns:1fr 1fr; gap:60px; align-items:center;
+  min-height:380px;
+  position:relative; overflow:hidden;
+}
+.hero-grid-overlay {
+  position:absolute; inset:0; pointer-events:none;
+  background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+  background-size:48px 48px;
+}
+.hero::after {
+  content:''; position:absolute; bottom:-120px; right:-80px;
+  width:400px; height:400px; border-radius:50%;
+  background:rgba(200,169,110,0.07); pointer-events:none;
+}
+.hero-tag {
+  display:inline-flex; align-items:center; gap:8px;
+  background:rgba(200,169,110,0.18); color:var(--accent);
+  font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase;
+  padding:6px 14px; border-radius:4px; width:fit-content; margin-bottom:22px;
+  border:1px solid rgba(200,169,110,0.3);
+}
+.hero h1 {
+  font-family:'Playfair Display',serif;
+  font-size:clamp(30px,3.2vw,46px); font-weight:900; color:var(--white);
+  line-height:1.15; margin-bottom:16px;
+}
+.hero h1 em { font-style:normal; color:var(--accent); }
+.hero-sub { font-size:14.5px; color:rgba(255,255,255,0.6); line-height:1.75; max-width:430px; }
+
+.hero-chat-widget {
+  background:rgba(255,255,255,0.06);
+  border:1px solid rgba(255,255,255,0.13);
+  border-radius:18px; overflow:hidden;
+  backdrop-filter:blur(10px);
+  position:relative; z-index:2;
+}
+.widget-bar {
+  background:rgba(6,26,90,0.6); padding:11px 18px;
+  display:flex; align-items:center; gap:7px;
+  border-bottom:1px solid rgba(255,255,255,0.08);
+}
+.wd { width:8px; height:8px; border-radius:50%; }
+.wd.r{background:#ff5f57;} .wd.y{background:#febc2e;} .wd.g{background:#28c840;}
+.widget-title { font-size:11px; color:rgba(255,255,255,0.5); margin-left:6px; letter-spacing:0.5px; }
+.widget-preview { padding:18px; display:flex; flex-direction:column; gap:11px; }
+.bub { max-width:90%; padding:10px 14px; border-radius:11px; font-size:12px; line-height:1.6; }
+.bub.u { align-self:flex-end; background:rgba(255,255,255,0.11); color:rgba(255,255,255,0.88); border-bottom-right-radius:3px; }
+.bub.a { align-self:flex-start; background:rgba(200,169,110,0.14); color:rgba(255,255,255,0.82); border-bottom-left-radius:3px; border:1px solid rgba(200,169,110,0.22); }
+.bub.a strong { color:var(--accent); }
+
+.main-container { max-width:1180px; margin:0 auto; padding:56px 48px 72px; }
+.section-label { font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--navy); margin-bottom:9px; }
+.section-heading { font-family:'Playfair Display',serif; font-size:30px; font-weight:700; margin-bottom:8px; }
+.section-sub { font-size:14px; color:var(--text-soft); margin-bottom:36px; }
+
+.dept-row { display:flex; gap:9px; flex-wrap:wrap; margin-bottom:28px; }
+.dept-pill {
+  display:flex; align-items:center; gap:7px;
+  padding:7px 15px; border-radius:100px;
+  font-size:12.5px; font-weight:500;
+  border:1.5px solid var(--light-gray);
+  background:var(--white); color:var(--text-soft);
+  cursor:pointer; transition:all 0.2s; user-select:none;
+}
+.dept-pill:hover { border-color:var(--navy); color:var(--navy); }
+.dept-pill.active { background:var(--navy); color:var(--white); border-color:var(--navy); }
+
+.chat-container { display:grid; grid-template-columns:1fr 340px; gap:22px; align-items:start; }
+
+.chat-box {
+  background:var(--white); border:1.5px solid var(--light-gray);
+  border-radius:18px; overflow:hidden; box-shadow:var(--shadow);
+}
+.chat-messages {
+  min-height:360px; max-height:500px; overflow-y:auto;
+  padding:22px; display:flex; flex-direction:column; gap:15px;
+  background:var(--off-white);
+}
+.chat-messages::-webkit-scrollbar { width:4px; }
+.chat-messages::-webkit-scrollbar-thumb { background:var(--light-gray); border-radius:2px; }
+
+.msg { display:flex; flex-direction:column; gap:4px; animation:msgIn 0.28s ease; }
+@keyframes msgIn { from{opacity:0;transform:translateY(7px)} to{opacity:1;transform:translateY(0)} }
+.msg.user { align-items:flex-end; }
+.msg.ai { align-items:flex-start; }
+.msg-sender { font-size:10px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:var(--mid-gray); }
+.msg.ai .msg-sender { color:var(--navy); }
+.msg-bubble {
+  max-width:87%; padding:13px 16px;
+  border-radius:13px; font-size:13.5px; line-height:1.72;
+}
+.msg.user .msg-bubble { background:var(--navy); color:var(--white); border-bottom-right-radius:4px; }
+.msg.ai .msg-bubble {
+  background:var(--white); color:var(--text);
+  border-bottom-left-radius:4px;
+  border:1.5px solid var(--light-gray);
+  box-shadow:0 2px 10px rgba(10,36,114,0.06);
+}
+.msg.ai .msg-bubble strong { color:var(--navy); }
+
+.prompt-box {
+  margin-top:13px;
+  background:var(--off-white); border:1.5px solid var(--light-gray);
+  border-radius:10px; padding:14px 16px;
+  font-family:'DM Mono','Courier New',monospace;
+  font-size:11.5px; color:#444; line-height:1.75;
+  position:relative; white-space:pre-wrap; word-break:break-word;
+}
+.pbox-label {
+  font-size:9px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase;
+  color:var(--navy); margin-bottom:9px; display:block;
+  font-family:'DM Sans',sans-serif;
+}
+.copy-inline {
+  position:absolute; top:10px; right:10px;
+  background:var(--navy); color:var(--white);
+  border:none; border-radius:6px; padding:4px 11px;
+  font-size:11px; font-weight:600; cursor:pointer;
+  transition:background 0.2s; font-family:'DM Sans',sans-serif;
+}
+.copy-inline:hover { background:var(--navy-mid); }
+.copy-inline.ok { background:var(--green); }
+
+.typing-indicator {
+  display:flex; gap:5px; padding:13px 17px;
+  background:var(--white); border:1.5px solid var(--light-gray);
+  border-radius:13px; border-bottom-left-radius:4px; width:fit-content;
+}
+.typing-indicator span {
+  width:7px; height:7px; border-radius:50%;
+  background:var(--navy); opacity:0.35;
+  animation:typingDot 1.2s ease-in-out infinite;
+}
+.typing-indicator span:nth-child(2){animation-delay:.2s}
+.typing-indicator span:nth-child(3){animation-delay:.4s}
+@keyframes typingDot { 0%,100%{opacity:0.2;transform:translateY(0)} 50%{opacity:1;transform:translateY(-3px)} }
+
+.chat-input-area {
+  padding:14px 18px; background:var(--white);
+  border-top:1px solid var(--light-gray);
+  display:flex; gap:10px; align-items:flex-end;
+}
+.chat-input {
+  flex:1; resize:none; border:1.5px solid var(--light-gray);
+  border-radius:11px; padding:10px 14px;
+  font-family:'DM Sans',sans-serif; font-size:13.5px; color:var(--text);
+  line-height:1.5; outline:none; transition:border-color 0.2s;
+  min-height:44px; max-height:110px; background:var(--off-white);
+}
+.chat-input:focus { border-color:var(--navy); background:var(--white); }
+.chat-input::placeholder { color:var(--mid-gray); }
+.send-btn {
+  width:44px; height:44px; flex-shrink:0;
+  background:var(--navy); color:var(--white);
+  border:none; border-radius:11px; font-size:18px; cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+  transition:background 0.2s, transform 0.15s;
+}
+.send-btn:hover { background:var(--navy-mid); transform:scale(1.05); }
+.send-btn:disabled { opacity:0.4; cursor:not-allowed; transform:none; }
+
+.sidebar { display:flex; flex-direction:column; gap:12px; }
+.sidebar-title { font-size:11px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--navy); padding:0 4px; }
+.quick-card {
+  background:var(--white); border:1.5px solid var(--light-gray);
+  border-radius:13px; padding:14px 16px; cursor:pointer; transition:all 0.2s;
+}
+.quick-card:hover { border-color:var(--navy); box-shadow:var(--shadow); transform:translateX(-2px); }
+.quick-card-top { display:flex; align-items:center; gap:9px; margin-bottom:7px; }
+.quick-card-icon { width:31px; height:31px; border-radius:8px; background:var(--navy-light); display:flex; align-items:center; justify-content:center; font-size:15px; flex-shrink:0; }
+.quick-card-name { font-size:13px; font-weight:600; color:var(--text); }
+.quick-card-desc { font-size:11.5px; color:var(--text-soft); line-height:1.6; }
+
+.examples-strip { background:var(--off-white); border-top:1px solid var(--light-gray); padding:36px 48px; }
+.examples-inner { max-width:1100px; margin:0 auto; }
+.examples-inner h3 { font-family:'Playfair Display',serif; font-size:19px; font-weight:700; margin-bottom:18px; }
+.examples-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:11px; }
+.example-chip {
+  background:var(--white); border:1.5px solid var(--light-gray);
+  border-radius:10px; padding:12px 14px;
+  font-size:11.5px; color:var(--text-soft); line-height:1.55;
+  cursor:pointer; transition:all 0.2s;
+}
+.example-chip:hover { border-color:var(--navy); color:var(--navy); background:var(--navy-light); }
+.example-chip strong { color:var(--text); font-size:10px; display:block; margin-bottom:4px; text-transform:uppercase; letter-spacing:0.5px; }
+
+footer { background:var(--navy); padding:28px 48px; display:flex; align-items:center; justify-content:space-between; }
+footer p { font-size:12px; color:rgba(255,255,255,0.3); }
+
+@media(max-width:900px){
+  .hero{grid-template-columns:1fr; padding:44px 24px;}
+  .hero-chat-widget{display:none;}
+  .main-container{padding:36px 20px 56px;}
+  .chat-container{grid-template-columns:1fr;}
+  .sidebar{display:none;}
+  .examples-grid{grid-template-columns:repeat(2,1fr);}
+  header{padding:0 20px;}
+  .examples-strip{padding:28px 20px;}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo-wrap">
+    <div class="logo-svg-wrap">
+      <svg height="38" viewBox="0 0 240 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="0"  y="20" width="6" height="24" rx="3" fill="#0a2472"/>
+        <rect x="9"  y="11" width="6" height="42" rx="3" fill="#0a2472"/>
+        <rect x="18" y="4"  width="6" height="56" rx="3" fill="#0a2472"/>
+        <rect x="27" y="11" width="6" height="42" rx="3" fill="#0a2472"/>
+        <rect x="36" y="20" width="6" height="24" rx="3" fill="#0a2472"/>
+        <text x="50" y="40" font-family="'DM Sans',Arial,sans-serif" font-weight="800" font-size="30" fill="#0a2472">Senda</text>
+        <text x="52" y="56" font-family="'DM Sans',Arial,sans-serif" font-weight="400" font-size="11.5" fill="#4a5a8a" letter-spacing="5">GRUPO</text>
+      </svg>
+    </div>
+    <div class="logo-divider"></div>
+    <div class="logo-tagline">Centro IA</div>
+  </div>
+  <nav>
+    <a href="#">Inicio</a>
+    <a href="#asistente">Asistente</a>
+    <a href="#">Recursos</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="hero-grid-overlay"></div>
+  <div style="position:relative;z-index:2">
+    <div class="hero-tag">✦ Asistente Inteligente</div>
+    <h1>Describe lo que<br/>necesitas y la <em>IA</em><br/>te guía al instante</h1>
+    <p class="hero-sub">Escribe en lenguaje natural lo que quieres lograr. El asistente identifica tu necesidad y te entrega el prompt perfecto para Claude for Excel.</p>
+  </div>
+  <div class="hero-chat-widget">
+    <div class="widget-bar">
+      <div class="wd r"></div><div class="wd y"></div><div class="wd g"></div>
+      <span class="widget-title">Asistente Senda IA</span>
+    </div>
+    <div class="widget-preview">
+      <div class="bub u">"Analízame este excel para hacer una retroalimentación al departamento de costos"</div>
+      <div class="bub a"><strong>¡Perfecto!</strong> Encontré el prompt ideal: <em>Análisis y Retroalimentación de Presupuesto de Obra</em>. Incluye desviaciones por partida, semáforo de alertas y proyección a terminación. Cópialo y pégalo en Claude for Excel 👇</div>
+    </div>
+  </div>
+</section>
+
+<div id="asistente" class="main-container">
+  <div class="section-label">Asistente IA</div>
+  <div class="section-heading">¿En qué te puedo ayudar hoy?</div>
+  <p class="section-sub">Escribe con tus propias palabras lo que necesitas. Sin tecnicismos — el asistente entiende el contexto de construcción.</p>
+
+  <div class="dept-row" id="deptRow">
+    <div class="dept-pill active" data-dept="todos" onclick="selectDept(this)"><span>🏢</span> Todos</div>
+    <div class="dept-pill" data-dept="presupuesto" onclick="selectDept(this)"><span>💰</span> Presupuesto</div>
+    <div class="dept-pill" data-dept="logistica" onclick="selectDept(this)"><span>🚚</span> Logística</div>
+    <div class="dept-pill" data-dept="arquitectura" onclick="selectDept(this)"><span>🏗️</span> Arquitectura</div>
+    <div class="dept-pill" data-dept="diseno" onclick="selectDept(this)"><span>✏️</span> Diseño</div>
+    <div class="dept-pill" data-dept="obra" onclick="selectDept(this)"><span>🦺</span> Supervisión</div>
+    <div class="dept-pill" data-dept="rh" onclick="selectDept(this)"><span>👥</span> RRHH</div>
+    <div class="dept-pill" data-dept="finanzas" onclick="selectDept(this)"><span>📊</span> Finanzas</div>
+    <div class="dept-pill" data-dept="legal" onclick="selectDept(this)"><span>⚖️</span> Legal</div>
+  </div>
+
+  <div class="chat-container">
+    <div class="chat-box">
+      <div class="chat-messages" id="chatMessages">
+        <div class="msg ai">
+          <span class="msg-sender">Asistente Senda</span>
+          <div class="msg-bubble">
+            ¡Hola! Soy tu asistente de Grupo Senda. 👋<br/><br/>
+            Cuéntame <strong>qué necesitas hacer</strong> con tus propias palabras. Por ejemplo:<br/>
+            <em>"Analízame este excel para hacer retroalimentación al departamento de costos"</em><br/><br/>
+            Identifico cuál es el mejor prompt para tu caso y te lo entrego listo para usar en <strong>Claude for Excel</strong>.
+          </div>
+        </div>
+      </div>
+      <div class="chat-input-area">
+        <textarea class="chat-input" id="chatInput" rows="1"
+          placeholder="Ej: 'Analízame este excel para retroalimentación al departamento de costos'..."
+          onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+        <button class="send-btn" id="sendBtn" onclick="sendMessage()">↑</button>
+      </div>
+    </div>
+
+    <div class="sidebar">
+      <div class="sidebar-title">Accesos rápidos</div>
+      <div class="quick-card" onclick="fillAndSend('Necesito analizar el presupuesto de obra y hacer retroalimentación al departamento de costos')">
+        <div class="quick-card-top"><div class="quick-card-icon">📊</div><div class="quick-card-name">Análisis de presupuesto</div></div>
+        <div class="quick-card-desc">Detecta desviaciones y genera retroalimentación por partida.</div>
+      </div>
+      <div class="quick-card" onclick="fillAndSend('Quiero comparar cotizaciones de proveedores y elegir la mejor opción')">
+        <div class="quick-card-top"><div class="quick-card-icon">🔍</div><div class="quick-card-name">Comparativo de compras</div></div>
+        <div class="quick-card-desc">Analiza y recomienda entre múltiples cotizaciones.</div>
+      </div>
+      <div class="quick-card" onclick="fillAndSend('Necesito hacer el reporte de avance de obra de esta semana para el cliente')">
+        <div class="quick-card-top"><div class="quick-card-icon">📋</div><div class="quick-card-name">Reporte de avance</div></div>
+        <div class="quick-card-desc">Genera reportes ejecutivos de avance de proyecto.</div>
+      </div>
+      <div class="quick-card" onclick="fillAndSend('Quiero proyectar el flujo de caja de mi proyecto para los próximos meses')">
+        <div class="quick-card-top"><div class="quick-card-icon">💹</div><div class="quick-card-name">Flujo de caja</div></div>
+        <div class="quick-card-desc">Proyecta ingresos y egresos mensuales por proyecto.</div>
+      </div>
+      <div class="quick-card" onclick="fillAndSend('Necesito elaborar un análisis de precio unitario para un concepto de obra')">
+        <div class="quick-card-top"><div class="quick-card-icon">🧮</div><div class="quick-card-name">Precio unitario (APU)</div></div>
+        <div class="quick-card-desc">Genera APUs completos con materiales, MO y equipo.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="examples-strip">
+  <div class="examples-inner">
+    <h3>Frases que puedes usar</h3>
+    <div class="examples-grid">
+      <div class="example-chip" onclick="fillAndSend('Analízame este excel para hacer una retroalimentación al departamento de costos')">
+        <strong>💰 Presupuesto</strong>"Analízame este excel para hacer retroalimentación al departamento de costos"
+      </div>
+      <div class="example-chip" onclick="fillAndSend('Necesito evaluar a mis proveedores y hacer un ranking de los mejores')">
+        <strong>🚚 Compras</strong>"Necesito evaluar a mis proveedores y hacer un ranking de los mejores"
+      </div>
+      <div class="example-chip" onclick="fillAndSend('Quiero revisar si hay inconsistencias entre mis planos de arquitectura y estructural')">
+        <strong>🏗️ Arquitectura</strong>"Quiero revisar inconsistencias entre mis planos de arquitectura y estructural"
+      </div>
+      <div class="example-chip" onclick="fillAndSend('Necesito crear una descripción de puesto para un residente de obra')">
+        <strong>👥 RRHH</strong>"Necesito crear una descripción de puesto para un residente de obra"
+      </div>
+      <div class="example-chip" onclick="fillAndSend('Necesito calcular cuánto material necesito para la obra con base en mis cantidades')">
+        <strong>📦 Logística</strong>"Necesito calcular cuánto material necesito para la obra"
+      </div>
+      <div class="example-chip" onclick="fillAndSend('Quiero saber la rentabilidad real de mi proyecto comparado con lo presupuestado')">
+        <strong>📊 Finanzas</strong>"Quiero saber la rentabilidad real vs lo presupuestado"
+      </div>
+      <div class="example-chip" onclick="fillAndSend('Necesito generar la bitácora de obra del día de hoy con todas las actividades')">
+        <strong>🦺 Supervisión</strong>"Necesito generar la bitácora de obra del día de hoy"
+      </div>
+      <div class="example-chip" onclick="fillAndSend('Quiero revisar un contrato con proveedor para identificar riesgos legales')">
+        <strong>⚖️ Legal</strong>"Quiero revisar un contrato con proveedor para identificar riesgos"
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <svg height="30" viewBox="0 0 240 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="0"  y="20" width="6" height="24" rx="3" fill="rgba(255,255,255,0.4)"/>
+    <rect x="9"  y="11" width="6" height="42" rx="3" fill="rgba(255,255,255,0.4)"/>
+    <rect x="18" y="4"  width="6" height="56" rx="3" fill="rgba(255,255,255,0.4)"/>
+    <rect x="27" y="11" width="6" height="42" rx="3" fill="rgba(255,255,255,0.4)"/>
+    <rect x="36" y="20" width="6" height="24" rx="3" fill="rgba(255,255,255,0.4)"/>
+    <text x="50" y="40" font-family="'DM Sans',Arial,sans-serif" font-weight="800" font-size="30" fill="rgba(255,255,255,0.65)">Senda</text>
+    <text x="52" y="56" font-family="'DM Sans',Arial,sans-serif" font-weight="400" font-size="11.5" fill="rgba(255,255,255,0.3)" letter-spacing="5">GRUPO</text>
+  </svg>
+  <p>© 2025 Grupo Senda — Centro de Inteligencia Artificial. Uso interno.</p>
+</footer>
+
+<script>
+// ─── PROMPT DATABASE ───
+const promptDB = [
+  {
+    id:'presup_1', dept:'presupuesto',
+    tags:['analizar','retroalimentacion','retroalimentación','feedback','costos','excel','presupuesto','desviacion','desviación','partida','costo'],
+    title:'Análisis y Retroalimentación de Presupuesto de Obra',
+    prompt:`Actúa como un experto en control de costos de construcción con 15 años de experiencia. Analiza el siguiente presupuesto de obra (datos adjuntos en Excel) y genera una retroalimentación ejecutiva completa para el departamento de costos que incluya:
+
+1. RESUMEN EJECUTIVO: Estado general del presupuesto en 3 líneas (semáforo: 🟢🟡🔴).
+2. ANÁLISIS DE DESVIACIONES: Tabla → Partida | Presupuesto Original | Costo Real | Variación $ | Variación % | Causa Probable.
+3. TOP 5 ALERTAS: Las cinco partidas con mayor desviación negativa, con análisis de causa raíz y responsable sugerido.
+4. MÉTRICAS CLAVE: Margen actual vs margen objetivo, % de avance financiero, índice de desempeño de costo (CPI).
+5. PROYECCIÓN A TERMINACIÓN: Estimación del costo final y nuevo margen proyectado.
+6. RECOMENDACIONES: Mínimo 5 acciones correctivas priorizadas con impacto esperado en $.
+7. COMPROMISOS SUGERIDOS: 3 compromisos con responsable, fecha y KPI de seguimiento.
+
+Usa semáforo visual (🟢🟡🔴) para cada partida. Formato listo para presentar en junta de obra.`
+  },
+  {
+    id:'presup_2', dept:'presupuesto',
+    tags:['cotizacion','cotización','comparar','proveedores','compras','precio','mejor','elegir','selección','proveedor'],
+    title:'Comparativo de Cotizaciones con Análisis de Riesgo',
+    prompt:`Eres un jefe de compras senior en una empresa constructora. Tengo las siguientes cotizaciones para [INSUMO/SERVICIO — pega los datos aquí].
+
+Genera un análisis comparativo profesional con:
+
+1. TABLA COMPARATIVA: Proveedor | Precio unitario | Precio total | Tiempo entrega | Condiciones de pago | Garantía | Calificación (1-10).
+2. ANÁLISIS PONDERADO: Asigna peso → precio (40%), calidad (25%), tiempo entrega (20%), servicio (15%). Calcula score final.
+3. BANDERAS ROJAS: Si algún precio está >20% por debajo del mercado (riesgo de calidad o incumplimiento).
+4. RECOMENDACIÓN FUNDAMENTADA: Proveedor recomendado con justificación técnica y económica.
+5. PUNTOS DE NEGOCIACIÓN: 3 cláusulas clave a negociar con el proveedor seleccionado.
+6. AHORRO POTENCIAL: Estimación vs peor opción y vs presupuesto original.
+
+Formato tabla Excel + párrafo ejecutivo de decisión.`
+  },
+  {
+    id:'presup_3', dept:'presupuesto',
+    tags:['apu','precio unitario','calculo','cálculo','concepto','material','mano de obra','rendimiento','elaborar'],
+    title:'Generador de Análisis de Precios Unitarios (APU)',
+    prompt:`Actúa como presupuestador de obra certificado. Para el concepto: [NOMBRE DEL CONCEPTO], con las especificaciones: [ESPECIFICACIONES].
+
+Genera el APU completo:
+
+1. MATERIALES: Descripción | Unidad | Cantidad | P.U. | Importe — con factor de desperdicio.
+2. MANO DE OBRA: Categoría (oficial/ayudante/especialista) | Rendimiento diario | Jornal | Importe.
+3. MAQUINARIA Y EQUIPO: Equipo | Horas | Costo/hora | Importe.
+4. COSTOS DIRECTOS: Subtotal materiales + MO + maquinaria.
+5. INDIRECTOS: [X]% (desglosado: administración, fianzas, seguros).
+6. FINANCIAMIENTO: [X]% sobre (directos + indirectos).
+7. UTILIDAD: [X]%.
+8. PRECIO UNITARIO TOTAL: Con y sin IVA.
+
+Muestra las fórmulas utilizadas. Formato tabla lista para Excel.`
+  },
+  {
+    id:'presup_4', dept:'presupuesto',
+    tags:['flujo','caja','proyectar','proyección','mensual','financiero','efectivo','deficit','déficit','capital'],
+    title:'Proyección de Flujo de Caja de Obra',
+    prompt:`Como director financiero de proyectos, con la siguiente información: [PRESUPUESTO POR PARTIDA], [PROGRAMA DE OBRA EN SEMANAS/MESES], [CONDICIONES DE PAGO AL CLIENTE], [CONDICIONES PAGO A PROVEEDORES].
+
+Elabora el flujo de caja proyectado mensual:
+
+1. TABLA DE FLUJO: Mes | Estimaciones emitidas | Cobros proyectados | Egresos | Flujo neto | Saldo acumulado.
+2. CURVA S FINANCIERA: Datos para graficar acumulado de ingresos vs egresos.
+3. MESES CRÍTICOS: Identifica meses con saldo negativo y monto del déficit.
+4. NECESIDAD DE FINANCIAMIENTO: Capital de trabajo requerido y máxima exposición.
+5. ANÁLISIS DE SENSIBILIDAD: Escenario optimista (+10% cobro) vs pesimista (retraso 30 días).
+6. RECOMENDACIONES: Estrategia para optimizar flujo (anticipos, factoring, ajuste de pagos).
+
+Formato tabla mensual lista para Excel con fórmulas explícitas.`
+  },
+  {
+    id:'presup_5', dept:'presupuesto',
+    tags:['rentabilidad','margen','roi','retorno','ganancia','utilidad','proyecto','resultado','real','presupuestado'],
+    title:'Análisis de Rentabilidad Real vs Presupuestada',
+    prompt:`Eres CFO de una empresa constructora. Con los datos: [INGRESOS REALES vs PRESUPUESTADOS], [COSTOS DIRECTOS REALES vs PRESUPUESTADOS por partida], [COSTOS INDIRECTOS], [PLAZO REAL vs PROGRAMADO].
+
+Genera análisis financiero comparativo:
+
+1. ESTADO DE RESULTADOS COMPARATIVO: Presupuestado | Real | Variación $ | Variación % por línea.
+2. ANÁLISIS DE VARIACIONES: Causa por cada desviación >5% (precio, volumen, eficiencia, alcance).
+3. INDICADORES: CPI, SPI, margen neto real vs meta.
+4. IMPACTO DEL PLAZO: Costo de días adicionales en indirectos y financiamiento.
+5. DATOS PARA GRÁFICA: Barras presupuesto vs real por partida principal.
+6. LECCIONES APRENDIDAS: 5 puntos para mejorar rentabilidad en proyectos futuros.
+7. AJUSTE DE PARÁMETROS: Nuevos % de indirectos, financiamiento y utilidad recomendados.
+
+Formato dashboard financiero para presentación a socios.`
+  },
+  {
+    id:'logistica_1', dept:'logistica',
+    tags:['orden de compra','orden','compra','proveedor','requisicion','requisición','material','pedido','generar'],
+    title:'Generador de Orden de Compra Profesional',
+    prompt:`Actúa como jefe de compras de empresa constructora. Con la requisición: [LISTA DE MATERIALES CON CANTIDADES Y ESPECIFICACIONES].
+
+Genera la orden de compra formal:
+
+1. ENCABEZADO: Número OC, fecha, vigencia, datos proveedor y proyecto.
+2. CUERPO: Descripción técnica | Unidad | Cantidad | P.U. | Importe | Partida presupuestal.
+3. CONDICIONES COMERCIALES: Forma de pago, plazo de crédito, descuentos.
+4. CONDICIONES DE ENTREGA: Lugar, fecha, empaque, etiquetado, responsable.
+5. CLÁUSULAS DE CALIDAD: Normas, inspección, criterios de rechazo.
+6. PENALIZACIONES: Por entrega tardía o material fuera de especificación.
+7. DOCUMENTACIÓN: Factura, remisión, certificados requeridos.
+
+Formato PDF-ready con totales e IVA desglosado.`
+  },
+  {
+    id:'logistica_2', dept:'logistica',
+    tags:['evaluar','evaluacion','evaluación','ranking','calificar','calificacion','desempeño','proveedor','proveedores'],
+    title:'Evaluación y Ranking de Proveedores',
+    prompt:`Eres especialista en gestión de proveedores. Con los datos: [NOMBRE PROVEEDOR], [HISTORIAL ENTREGAS: fechas prometidas vs reales], [INCIDENCIAS DE CALIDAD], [PRECIOS VS MERCADO], [SERVICIO POSTVENTA].
+
+Genera evaluación completa:
+
+1. SCORECARD: Criterio | Peso | Calificación (1-10) | Ponderado → puntualidad (25%), calidad (30%), precio (25%), servicio (15%), documentación (5%).
+2. CALIFICACIÓN FINAL: Porcentaje y categoría A/B/C/D.
+3. COMPARATIVO: Vs promedio de la categoría.
+4. FORTALEZAS Y ÁREAS DE MEJORA: Top 3 de cada uno con evidencia.
+5. CLASIFICACIÓN: Estratégico / Confiable / En desarrollo / A eliminar.
+6. PLAN DE ACCIÓN: 3 compromisos de mejora con fecha y responsable.
+7. RECOMENDACIÓN: Mantener, desarrollar, sustituir o descalificar con justificación.`
+  },
+  {
+    id:'obra_1', dept:'obra',
+    tags:['bitacora','bitácora','reporte diario','actividades','dia','día','registro','obra','avance diario'],
+    title:'Generador de Bitácora de Obra Oficial',
+    prompt:`Eres residente de obra. Con los datos del día: [FECHA], [PROYECTO], [PERSONAL POR CATEGORÍA Y CANTIDAD], [ACTIVIDADES EJECUTADAS POR FRENTE], [MAQUINARIA EN SITIO], [CONDICIONES CLIMÁTICAS], [INCIDENCIAS O ACUERDOS].
+
+Genera la nota de bitácora oficial:
+
+1. ENCABEZADO: Proyecto, número de nota, fecha, clima, temperatura.
+2. PERSONAL EN SITIO: Tabla por categoría con cantidad y empresa.
+3. MAQUINARIA Y EQUIPO: En operación y en espera.
+4. ACTIVIDADES EJECUTADAS: Por frente — descripción técnica con ubicación (eje/nivel/zona).
+5. AVANCE ESTIMADO: % por partida ejecutada hoy.
+6. INCIDENCIAS: Descripción, causa, impacto en programa/costo, acuerdo tomado.
+7. INSTRUCCIONES PARA MAÑANA: Actividades programadas y recursos necesarios.
+
+Redacción técnica formal, lista para firma.`
+  },
+  {
+    id:'obra_2', dept:'obra',
+    tags:['reporte semanal','informe semanal','avance semanal','semana','programa','cliente','ejecutivo'],
+    title:'Reporte de Avance Semanal para Cliente',
+    prompt:`Como superintendente de obra, con los datos de la semana [NÚMERO] del proyecto [NOMBRE]: [ACTIVIDADES EJECUTADAS], [% AVANCE POR PARTIDA], [PERSONAL PROMEDIO], [INCIDENCIAS].
+
+Genera el reporte ejecutivo semanal:
+
+1. RESUMEN EJECUTIVO: 3 líneas con estado general, logros y alertas.
+2. AVANCE FÍSICO: Partida — Programado acumulado | Real acumulado | Variación.
+3. CURVA S: Datos para graficar avance programado vs real semana a semana.
+4. ACTIVIDADES CRÍTICAS: Ruta crítica próxima semana con responsables.
+5. RIESGOS IDENTIFICADOS: Probabilidad, impacto y mitigación.
+6. COMPROMISOS: Pendientes anteriores + nuevos generados esta semana.
+
+Formato presentable para cliente y Dirección.`
+  },
+  {
+    id:'rh_1', dept:'rh',
+    tags:['descripcion','descripción','puesto','perfil','empleado','cargo','contratacion','reclutamiento','crear'],
+    title:'Descripción de Puesto para Empresa Constructora',
+    prompt:`Eres director de RRHH en empresa constructora de 200 empleados. Crea la descripción completa para [NOMBRE DEL PUESTO] que reporta a [JEFE DIRECTO].
+
+Genera el perfil completo:
+
+1. IDENTIFICACIÓN: Nombre, área, nivel jerárquico, fecha.
+2. OBJETIVO DEL PUESTO: Razón de ser en 2 líneas.
+3. RESPONSABILIDADES: 10-12 actividades específicas del rol en construcción.
+4. PERFIL REQUERIDO: Educación | Carreras afines | Experiencia en años | Experiencia en construcción.
+5. CONOCIMIENTOS TÉCNICOS: Software (AutoCAD, Revit, Project, Excel), normas, reglamentos.
+6. COMPETENCIAS CONDUCTUALES: 5 competencias con nivel esperado.
+7. RELACIONES: Internas y externas (proveedores, clientes, autoridades).
+8. CONDICIONES: Viajes, horario, obra/oficina, EPP.
+9. RANGO SALARIAL: Estimado en mercado de construcción en México.
+
+Formato para Manual de Organización corporativo.`
+  },
+  {
+    id:'finanzas_1', dept:'finanzas',
+    tags:['rentabilidad real','comparado','presupuestado','financiero','estado','resultados','proyecto','ganancia'],
+    title:'Dashboard Financiero de Proyectos Activos',
+    prompt:`Como controller financiero, con los datos mensuales de todos los proyectos activos: [DATOS POR PROYECTO].
+
+Genera el reporte ejecutivo mensual:
+
+1. RESUMEN: Facturación y cobranza del mes.
+2. TABLA DE RENTABILIDAD: Proyecto | Ingresos | Costos | Margen $ | Margen %.
+3. PROYECTOS EN RIESGO: Margen <5% con análisis de causa.
+4. CARTERA: Clientes con días de crédito promedio.
+5. PROYECCIÓN: Flujo próximos 3 meses.
+6. KPIs: Margen promedio, días de cobro, rotación de cartera.
+
+Formato dashboard para Dirección General.`
+  },
+  {
+    id:'legal_1', dept:'legal',
+    tags:['contrato','revisar','riesgo','clausula','cláusula','proveedor','cliente','legal','identificar'],
+    title:'Revisión de Contrato con Identificación de Riesgos',
+    prompt:`Eres abogado especialista en contratos de construcción. Revisa el siguiente contrato: [PEGAR TEXTO O CLÁUSULAS CLAVE].
+
+Genera análisis jurídico preliminar:
+
+1. RESUMEN EJECUTIVO: Tipo, partes, objeto, monto y plazo en 5 líneas.
+2. MAPA DE OBLIGACIONES: Obligación | Responsable | Fecha/condición | Consecuencia.
+3. CLÁUSULAS DE RIESGO: Identificar y calificar (alto/medio/bajo) en: penalizaciones, garantías, rescisión, limitación de responsabilidad, jurisdicción.
+4. CLÁUSULAS AUSENTES: Que deberían incluirse para proteger a Grupo Senda.
+5. PUNTOS DE NEGOCIACIÓN: Top 5 cláusulas a renegociar con propuesta alternativa.
+6. SEMÁFORO GLOBAL: Bajo / Medio / Alto riesgo con justificación.
+7. ACCIONES: Pasos antes de firmar.
+
+Nota: Orientación preliminar. Consultar con abogado para decisión final.`
+  },
+  {
+    id:'arq_1', dept:'arquitectura',
+    tags:['especificaciones','tecnicas','técnicas','partida','normas','calidad','materiales','generar','constructivo'],
+    title:'Especificaciones Técnicas para Partida de Obra',
+    prompt:`Eres arquitecto especialista en especificaciones técnicas. Para la partida: [NOMBRE], proyecto: [TIPO].
+
+Genera especificaciones completas:
+
+1. ALCANCE: Trabajo incluido y excluido.
+2. NORMAS: NMX, NOM, ACI, ASTM, NTC y reglamentos locales vigentes.
+3. MATERIALES: Especificación técnica, marcas aceptadas, equivalencias.
+4. PROCEDIMIENTO: Paso a paso con preparación, mezclas, tiempos y condiciones.
+5. CONTROL DE CALIDAD: Pruebas, frecuencia, tolerancias, aceptación/rechazo.
+6. SEGURIDAD: EPP y medidas específicas.
+7. MEDICIÓN Y PAGO: Unidad, cuantificación, conceptos incluidos.
+
+Redacción técnica formal para libro de especificaciones del proyecto.`
+  }
+];
+
+// ─── STATE ───
+let currentDept = 'todos';
+let isLoading = false;
+
+function selectDept(el) {
+  document.querySelectorAll('.dept-pill').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  currentDept = el.dataset.dept;
+}
+
+function fillAndSend(text) {
+  const input = document.getElementById('chatInput');
+  input.value = text;
+  autoResize(input);
+  sendMessage();
+}
+
+function handleKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+}
+
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 110) + 'px';
+}
+
+function matchPrompts(userText) {
+  const text = userText.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  return promptDB
+    .map(p => {
+      if (currentDept !== 'todos' && p.dept !== currentDept) return {...p, score: -1};
+      const score = p.tags.reduce((acc, tag) => {
+        const t = tag.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+        return acc + (text.includes(t) ? 2 : 0);
+      }, 0);
+      return {...p, score};
+    })
+    .filter(p => p.score > 0)
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 2);
+}
+
+async function sendMessage() {
+  const input = document.getElementById('chatInput');
+  const text = input.value.trim();
+  if (!text || isLoading) return;
+
+  appendMsg('user', text);
+  input.value = '';
+  input.style.height = 'auto';
+  isLoading = true;
+  document.getElementById('sendBtn').disabled = true;
+
+  const typingId = showTyping();
+
+  try {
+    const matched = matchPrompts(text);
+
+    const systemPrompt = `Eres el asistente de inteligencia artificial de Grupo Senda, empresa constructora. Tu único rol:
+1. Entender con empatía lo que el empleado necesita (contexto de construcción)
+2. Confirmar brevemente qué entendiste (1-2 líneas, tono cálido y profesional)
+3. Indicar el nombre del prompt más adecuado de la base de conocimiento
+4. Explicar en 2 líneas POR QUÉ ese prompt es perfecto para su caso
+5. Dar 1-2 tips de personalización específicos para su situación
+
+REGLAS:
+- Siempre en español
+- Tono: profesional pero cercano, como colega experto
+- NO generes el prompt completo (el sistema lo muestra automáticamente)
+- SÍ menciona el NOMBRE EXACTO del prompt recomendado en negrita
+- Máximo 100 palabras en tu respuesta
+- Si el usuario menciona datos específicos (nombre proyecto, departamento), úsalos`;
+
+    const userMsg = `El empleado de Grupo Senda solicita: "${text}"
+
+${matched.length > 0 ? `Prompts más relevantes identificados:\n${matched.map(p => `- "${p.title}" (depto: ${p.dept})`).join('\n')}` : 'No hay coincidencia exacta, sugiere el más cercano.'}
+
+Responde: confirma lo que entendiste, recomienda el prompt por nombre, explica por qué, da tips de personalización. Máximo 100 palabras.`;
+
+    const response = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({
+        model: "claude-sonnet-4-20250514",
+        max_tokens: 1000,
+        system: systemPrompt,
+        messages: [{role: "user", content: userMsg}]
+      })
+    });
+
+    const data = await response.json();
+    const aiText = data.content?.map(c => c.text || '').join('') || 'Lo siento, hubo un problema. Intenta de nuevo.';
+
+    removeTyping(typingId);
+    renderAIMsg(aiText, matched);
+
+  } catch (err) {
+    removeTyping(typingId);
+    appendMsg('ai', 'Hubo un error al conectar. Por favor intenta de nuevo.');
+  }
+
+  isLoading = false;
+  document.getElementById('sendBtn').disabled = false;
+}
+
+function renderAIMsg(aiText, matched) {
+  const msgs = document.getElementById('chatMessages');
+  const div = document.createElement('div');
+  div.className = 'msg ai';
+
+  const promptBoxesHTML = matched.length > 0
+    ? matched.map((p, i) => `
+        <div class="prompt-box">
+          <span class="pbox-label">📋 Prompt${matched.length > 1 ? ' #' + (i + 1) : ''}: ${p.title}</span>${escHtml(p.prompt)}<button class="copy-inline" id="cb-${p.id}" onclick="copyP('${p.id}')">Copiar</button>
+        </div>`).join('')
+    : '';
+
+  div.innerHTML = `
+    <span class="msg-sender">Asistente Senda</span>
+    <div class="msg-bubble">
+      ${fmtText(aiText)}
+      ${promptBoxesHTML}
+    </div>`;
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function fmtText(t) {
+  return t.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\*(.*?)\*/g, '<em>$1</em>').replace(/\n/g, '<br/>');
+}
+
+function escHtml(t) {
+  return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function copyP(id) {
+  const p = promptDB.find(x => x.id === id);
+  if (!p) return;
+  navigator.clipboard.writeText(p.prompt).then(() => {
+    const btn = document.getElementById('cb-' + id);
+    if (btn) { btn.textContent = '✓ Copiado'; btn.classList.add('ok'); setTimeout(() => { btn.textContent = 'Copiar'; btn.classList.remove('ok'); }, 2000); }
+  });
+}
+
+function appendMsg(role, text) {
+  const msgs = document.getElementById('chatMessages');
+  const div = document.createElement('div');
+  div.className = `msg ${role}`;
+  div.innerHTML = `<span class="msg-sender">${role === 'user' ? 'Tú' : 'Asistente Senda'}</span><div class="msg-bubble">${fmtText(text)}</div>`;
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function showTyping() {
+  const msgs = document.getElementById('chatMessages');
+  const id = 'typ-' + Date.now();
+  const div = document.createElement('div');
+  div.className = 'msg ai'; div.id = id;
+  div.innerHTML = `<span class="msg-sender">Asistente Senda</span><div class="typing-indicator"><span></span><span></span><span></span></div>`;
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+  return id;
+}
+
+function removeTyping(id) {
+  const el = document.getElementById(id);
+  if (el) el.remove();
+}
+</script>
+</body>
+</html>
