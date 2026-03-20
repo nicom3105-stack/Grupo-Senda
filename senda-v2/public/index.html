@@ -295,6 +295,7 @@ nav a:hover { color:var(--navy); }
 footer { background:var(--navy); padding:28px 48px; display:flex; align-items:center; justify-content:space-between; }
 footer p { font-size:12px; color:rgba(255,255,255,0.3); }
 
+/* ── TABLET ── */
 @media(max-width:900px){
   .hero{grid-template-columns:1fr; padding:44px 24px;}
   .hero-chat-widget{display:none;}
@@ -304,6 +305,97 @@ footer p { font-size:12px; color:rgba(255,255,255,0.3); }
   .examples-grid{grid-template-columns:repeat(2,1fr);}
   header{padding:0 20px;}
   .examples-strip{padding:28px 20px;}
+}
+
+/* ── MOBILE ── */
+@media(max-width:600px){
+  /* Header */
+  header {
+    padding:0 16px;
+    height:58px;
+  }
+  .logo-divider { display:none; }
+  .logo-tagline { display:none; }
+  .logo-svg-wrap img { height:30px !important; }
+  nav a:not(.nav-dropdown .nav-dropdown-btn) { display:none; }
+  .nav-dropdown-btn { font-size:12px; }
+  .nav-dropdown-menu { right:-8px; min-width:170px; }
+
+  /* Hero */
+  .hero {
+    padding:36px 20px 40px;
+    min-height:auto;
+  }
+  .hero h1 {
+    font-size:32px;
+    margin-bottom:14px;
+  }
+  .hero-sub { font-size:13.5px; }
+  .hero-tag { font-size:9px; padding:5px 11px; }
+
+  /* Main container */
+  .main-container { padding:28px 16px 48px; }
+  .section-heading { font-size:24px; }
+  .section-sub { font-size:13px; margin-bottom:24px; }
+
+  /* Dept pills — scrollable row */
+  .dept-row {
+    flex-wrap:nowrap;
+    overflow-x:auto;
+    padding-bottom:8px;
+    gap:7px;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:none;
+  }
+  .dept-row::-webkit-scrollbar { display:none; }
+  .dept-pill {
+    flex-shrink:0;
+    font-size:12px;
+    padding:6px 13px;
+  }
+
+  /* Chat box */
+  .chat-box { border-radius:14px; }
+  .chat-messages {
+    min-height:300px;
+    max-height:420px;
+    padding:16px;
+    gap:12px;
+  }
+  .msg-bubble {
+    font-size:13px;
+    padding:11px 14px;
+    max-width:94%;
+  }
+  .prompt-box {
+    font-size:11px;
+    padding:12px 14px;
+  }
+  .copy-inline { font-size:10px; padding:3px 8px; }
+  .chat-input-area { padding:10px 12px; gap:8px; }
+  .chat-input { font-size:13px; padding:9px 12px; }
+  .send-btn { width:40px; height:40px; font-size:16px; }
+  .file-upload-btn { width:40px; height:40px; font-size:16px; }
+
+  /* Examples strip */
+  .examples-strip { padding:24px 16px; }
+  .examples-grid { grid-template-columns:1fr 1fr; gap:8px; }
+  .example-chip { font-size:11px; padding:10px 12px; }
+
+  /* Footer */
+  footer {
+    padding:24px 20px;
+    flex-direction:column;
+    align-items:flex-start;
+    gap:14px;
+  }
+  footer img { height:28px !important; }
+  footer div { text-align:left !important; }
+  footer p { font-size:11px; }
+
+  /* File preview */
+  .file-preview-bar { padding:6px 12px 0; }
+  .file-chip { font-size:11px; padding:4px 8px; }
 }
 </style>
 </head>
