@@ -331,25 +331,29 @@ footer p { font-size:12px; color:rgba(255,255,255,0.3); }
 
     <div class="sidebar">
       <div class="sidebar-title">Accesos rápidos</div>
-      <div class="quick-card" onclick="fillAndSend('Necesito analizar el presupuesto de obra y hacer retroalimentación al departamento de costos')">
+      <div class="quick-card" onclick="fillAndSend('Analízame el presupuesto de obra para retroalimentación al departamento de costos')">
         <div class="quick-card-top"><div class="quick-card-icon">📊</div><div class="quick-card-name">Análisis de presupuesto</div></div>
         <div class="quick-card-desc">Detecta desviaciones y genera retroalimentación por partida.</div>
       </div>
-      <div class="quick-card" onclick="fillAndSend('Quiero comparar cotizaciones de proveedores y elegir la mejor opción')">
-        <div class="quick-card-top"><div class="quick-card-icon">🔍</div><div class="quick-card-name">Comparativo de compras</div></div>
-        <div class="quick-card-desc">Analiza y recomienda entre múltiples cotizaciones.</div>
+      <div class="quick-card" onclick="fillAndSend('Necesito generar una estimación de cobro con el avance de esta semana')">
+        <div class="quick-card-top"><div class="quick-card-icon">🧾</div><div class="quick-card-name">Estimación de cobro</div></div>
+        <div class="quick-card-desc">Genera estimaciones de cobro listas para enviar al cliente.</div>
       </div>
-      <div class="quick-card" onclick="fillAndSend('Necesito hacer el reporte de avance de obra de esta semana para el cliente')">
-        <div class="quick-card-top"><div class="quick-card-icon">📋</div><div class="quick-card-name">Reporte de avance</div></div>
+      <div class="quick-card" onclick="fillAndSend('Quiero calcular la explosión de insumos y materiales necesarios para la obra')">
+        <div class="quick-card-top"><div class="quick-card-icon">📦</div><div class="quick-card-name">Explosión de insumos</div></div>
+        <div class="quick-card-desc">Calcula todos los materiales necesarios por concepto.</div>
+      </div>
+      <div class="quick-card" onclick="fillAndSend('Necesito hacer el reporte semanal de avance de obra para el cliente')">
+        <div class="quick-card-top"><div class="quick-card-icon">📋</div><div class="quick-card-name">Reporte semanal</div></div>
         <div class="quick-card-desc">Genera reportes ejecutivos de avance de proyecto.</div>
       </div>
-      <div class="quick-card" onclick="fillAndSend('Quiero proyectar el flujo de caja de mi proyecto para los próximos meses')">
-        <div class="quick-card-top"><div class="quick-card-icon">💹</div><div class="quick-card-name">Flujo de caja</div></div>
-        <div class="quick-card-desc">Proyecta ingresos y egresos mensuales por proyecto.</div>
-      </div>
-      <div class="quick-card" onclick="fillAndSend('Necesito elaborar un análisis de precio unitario para un concepto de obra')">
+      <div class="quick-card" onclick="fillAndSend('Quiero elaborar un APU completo para un concepto de obra')">
         <div class="quick-card-top"><div class="quick-card-icon">🧮</div><div class="quick-card-name">Precio unitario (APU)</div></div>
-        <div class="quick-card-desc">Genera APUs completos con materiales, MO y equipo.</div>
+        <div class="quick-card-desc">Genera APUs con materiales, mano de obra y equipo.</div>
+      </div>
+      <div class="quick-card" onclick="fillAndSend('Necesito revisar un contrato con proveedor para identificar riesgos legales')">
+        <div class="quick-card-top"><div class="quick-card-icon">⚖️</div><div class="quick-card-name">Revisar contrato</div></div>
+        <div class="quick-card-desc">Identifica riesgos y cláusulas problemáticas en contratos.</div>
       </div>
     </div>
   </div>
@@ -403,272 +407,706 @@ footer p { font-size:12px; color:rgba(255,255,255,0.3); }
 <script>
 // ─── PROMPT DATABASE ───
 const promptDB = [
+
+  // ══════════════════════════════════════════════
+  // PRESUPUESTO (10 prompts)
+  // ══════════════════════════════════════════════
   {
     id:'presup_1', dept:'presupuesto',
-    tags:[
-      'analizar','analiza','análisis','revisar','revisa','revision','revisión','checar','checa',
-      'retroalimentacion','retroalimentación','feedback','retro','informe','reporte','reportar',
-      'costos','costo','presupuesto','presupuestos','partida','partidas','obra','gasto','gastos',
-      'desviacion','desviación','desviaciones','variacion','variación','diferencia','sobrecosto',
-      'departamento de costos','depto costos','area de costos','control de costos',
-      'excel','hoja','datos','tabla','archivo','control','seguimiento','monitoreo',
-      'comparar','comparativo','cuanto me estoy gastando','como voy','como esta','estado'
-    ],
-    title:'Análisis y Retroalimentación de Presupuesto de Obra',
-    prompt:`Actúa como un experto en control de costos de construcción con 15 años de experiencia. Analiza el siguiente presupuesto de obra (datos adjuntos en Excel) y genera una retroalimentación ejecutiva completa para el departamento de costos que incluya:
+    tags:['analizar','analiza','retroalimentacion','retroalimentación','feedback','costos','costo','excel','presupuesto','desviacion','desviación','partida','control','seguimiento','como voy','estado','revisar','checar'],
+    title:'Retroalimentación de Presupuesto de Obra',
+    prompt:`Actúa como experto en control de costos de construcción con 15 años de experiencia. Analiza el presupuesto adjunto y genera retroalimentación ejecutiva para el departamento de costos:
 
-1. RESUMEN EJECUTIVO: Estado general del presupuesto en 3 líneas (semáforo: 🟢🟡🔴).
-2. ANÁLISIS DE DESVIACIONES: Tabla → Partida | Presupuesto Original | Costo Real | Variación $ | Variación % | Causa Probable.
-3. TOP 5 ALERTAS: Las cinco partidas con mayor desviación negativa, con análisis de causa raíz y responsable sugerido.
-4. MÉTRICAS CLAVE: Margen actual vs margen objetivo, % de avance financiero, índice de desempeño de costo (CPI).
-5. PROYECCIÓN A TERMINACIÓN: Estimación del costo final y nuevo margen proyectado.
-6. RECOMENDACIONES: Mínimo 5 acciones correctivas priorizadas con impacto esperado en $.
-7. COMPROMISOS SUGERIDOS: 3 compromisos con responsable, fecha y KPI de seguimiento.
+1. SEMÁFORO GENERAL: Estado global 🟢🟡🔴 con justificación en 3 líneas.
+2. TABLA DE DESVIACIONES: Partida | Presupuesto | Real | Variación $ | Variación % | Causa probable.
+3. TOP 5 ALERTAS: Partidas con mayor desviación negativa + causa raíz + responsable sugerido.
+4. MÉTRICAS: Margen actual vs objetivo, % avance financiero, CPI (índice de desempeño de costo).
+5. PROYECCIÓN A TERMINACIÓN: Costo final estimado y nuevo margen.
+6. ACCIONES CORRECTIVAS: 5 acciones priorizadas con impacto esperado en $.
+7. COMPROMISOS: 3 compromisos con responsable, fecha y KPI.
 
-Usa semáforo visual (🟢🟡🔴) para cada partida. Formato listo para presentar en junta de obra.`
+Semáforo por partida 🟢🟡🔴. Formato para junta de obra.`
   },
   {
     id:'presup_2', dept:'presupuesto',
-    tags:[
-      'cotizacion','cotización','cotizaciones','cotizar','comparar','comparativo','comparacion',
-      'proveedores','proveedor','compras','comprar','precio','precios','mejor precio','elegir',
-      'seleccion','selección','oferta','ofertas','licitacion','licitación','propuesta','propuestas',
-      'cual conviene','quien conviene','mejor opcion','mejor opción'
-    ],
+    tags:['cotizacion','cotización','comparar','comparativo','proveedores','proveedor','precio','elegir','selección','oferta','propuesta','licitacion','licitación','cual conviene'],
     title:'Comparativo de Cotizaciones con Análisis de Riesgo',
-    prompt:`Eres un jefe de compras senior en una empresa constructora. Tengo las siguientes cotizaciones para [INSUMO/SERVICIO — pega los datos aquí].
+    prompt:`Eres jefe de compras senior en empresa constructora. Analiza las cotizaciones para [INSUMO/SERVICIO]:
 
-Genera un análisis comparativo profesional con:
+1. TABLA COMPARATIVA: Proveedor | P.U. | Total | Entrega | Pago | Garantía | Score (1-10).
+2. ANÁLISIS PONDERADO: precio 40%, calidad 25%, entrega 20%, servicio 15%.
+3. BANDERAS ROJAS: Precio >20% bajo mercado = riesgo de incumplimiento.
+4. RECOMENDACIÓN: Proveedor elegido con justificación técnica y económica.
+5. NEGOCIACIÓN: 3 puntos clave a negociar.
+6. AHORRO: Estimación vs peor opción y vs presupuesto.
 
-1. TABLA COMPARATIVA: Proveedor | Precio unitario | Precio total | Tiempo entrega | Condiciones de pago | Garantía | Calificación (1-10).
-2. ANÁLISIS PONDERADO: Asigna peso → precio (40%), calidad (25%), tiempo entrega (20%), servicio (15%). Calcula score final.
-3. BANDERAS ROJAS: Si algún precio está >20% por debajo del mercado (riesgo de calidad o incumplimiento).
-4. RECOMENDACIÓN FUNDAMENTADA: Proveedor recomendado con justificación técnica y económica.
-5. PUNTOS DE NEGOCIACIÓN: 3 cláusulas clave a negociar con el proveedor seleccionado.
-6. AHORRO POTENCIAL: Estimación vs peor opción y vs presupuesto original.
-
-Formato tabla Excel + párrafo ejecutivo de decisión.`
+Tabla Excel + párrafo ejecutivo de decisión.`
   },
   {
     id:'presup_3', dept:'presupuesto',
-    tags:[
-      'apu','precio unitario','precios unitarios','analisis de precio','análisis de precio',
-      'calculo','cálculo','calcular','concepto','conceptos','material','materiales',
-      'mano de obra','rendimiento','rendimientos','elaborar','elabora','hacer apu',
-      'cuanto cuesta','cuanto vale','costo unitario','desglose','explosión de insumos','explosion'
-    ],
-    title:'Generador de Análisis de Precios Unitarios (APU)',
-    prompt:`Actúa como presupuestador de obra certificado. Para el concepto: [NOMBRE DEL CONCEPTO], con las especificaciones: [ESPECIFICACIONES].
+    tags:['apu','precio unitario','precios unitarios','calculo','cálculo','calcular','concepto','mano de obra','rendimiento','elaborar','cuanto cuesta','desglose','explosion','explosión'],
+    title:'Análisis de Precios Unitarios (APU) Completo',
+    prompt:`Actúa como presupuestador certificado. Para el concepto [NOMBRE], especificaciones [ESPECIFICACIONES]:
 
-Genera el APU completo:
-
-1. MATERIALES: Descripción | Unidad | Cantidad | P.U. | Importe — con factor de desperdicio.
-2. MANO DE OBRA: Categoría (oficial/ayudante/especialista) | Rendimiento diario | Jornal | Importe.
-3. MAQUINARIA Y EQUIPO: Equipo | Horas | Costo/hora | Importe.
-4. COSTOS DIRECTOS: Subtotal materiales + MO + maquinaria.
-5. INDIRECTOS: [X]% (desglosado: administración, fianzas, seguros).
-6. FINANCIAMIENTO: [X]% sobre (directos + indirectos).
+1. MATERIALES: Descripción | Unidad | Cantidad | P.U. | Factor desperdicio | Importe.
+2. MANO DE OBRA: Categoría | Rendimiento diario | Jornal | Importe.
+3. MAQUINARIA: Equipo | Horas | Costo/hora | Importe.
+4. COSTOS DIRECTOS: Subtotal M+MO+Maq.
+5. INDIRECTOS: [X]% desglosado (administración, fianzas, seguros).
+6. FINANCIAMIENTO: [X]% sobre directos+indirectos.
 7. UTILIDAD: [X]%.
-8. PRECIO UNITARIO TOTAL: Con y sin IVA.
+8. PRECIO TOTAL: Con y sin IVA.
 
-Muestra las fórmulas utilizadas. Formato tabla lista para Excel.`
+Muestra fórmulas. Formato tabla Excel.`
   },
   {
     id:'presup_4', dept:'presupuesto',
-    tags:[
-      'flujo','caja','flujo de caja','flujo de efectivo','proyectar','proyeccion','proyección',
-      'mensual','financiero','efectivo','deficit','déficit','capital','dinero','liquidez',
-      'cuando necesito dinero','cuando necesito pagar','cobros','pagos','estimaciones',
-      'cuando cobro','cuando pago','saldo','caja negativa','necesito financiamiento'
-    ],
+    tags:['flujo','caja','flujo de caja','proyectar','proyección','mensual','efectivo','deficit','déficit','capital','liquidez','cobros','pagos','cuando cobro','saldo'],
     title:'Proyección de Flujo de Caja de Obra',
-    prompt:`Como director financiero de proyectos, con la siguiente información: [PRESUPUESTO POR PARTIDA], [PROGRAMA DE OBRA EN SEMANAS/MESES], [CONDICIONES DE PAGO AL CLIENTE], [CONDICIONES PAGO A PROVEEDORES].
+    prompt:`Como director financiero de proyectos, con: [PRESUPUESTO POR PARTIDA], [PROGRAMA OBRA], [CONDICIONES PAGO CLIENTE], [CONDICIONES PAGO PROVEEDORES]:
 
-Elabora el flujo de caja proyectado mensual:
+1. TABLA FLUJO: Mes | Estimaciones | Cobros | Egresos | Flujo neto | Saldo acumulado.
+2. CURVA S: Datos para graficar ingresos vs egresos acumulados.
+3. MESES CRÍTICOS: Meses con saldo negativo y monto del déficit.
+4. FINANCIAMIENTO: Capital de trabajo requerido y máxima exposición.
+5. SENSIBILIDAD: Optimista (+10% cobro) vs pesimista (retraso 30 días).
+6. ESTRATEGIA: Anticipos, factoring, ajuste de pagos para optimizar flujo.
 
-1. TABLA DE FLUJO: Mes | Estimaciones emitidas | Cobros proyectados | Egresos | Flujo neto | Saldo acumulado.
-2. CURVA S FINANCIERA: Datos para graficar acumulado de ingresos vs egresos.
-3. MESES CRÍTICOS: Identifica meses con saldo negativo y monto del déficit.
-4. NECESIDAD DE FINANCIAMIENTO: Capital de trabajo requerido y máxima exposición.
-5. ANÁLISIS DE SENSIBILIDAD: Escenario optimista (+10% cobro) vs pesimista (retraso 30 días).
-6. RECOMENDACIONES: Estrategia para optimizar flujo (anticipos, factoring, ajuste de pagos).
-
-Formato tabla mensual lista para Excel con fórmulas explícitas.`
+Tabla mensual con fórmulas explícitas lista para Excel.`
   },
   {
     id:'presup_5', dept:'presupuesto',
-    tags:[
-      'rentabilidad','rentable','margen','margenes','márgenes','roi','retorno','ganancia','ganancias',
-      'utilidad','utilidades','proyecto','resultado','resultados','real','presupuestado',
-      'cuanto gane','cuanto gané','cuanto gano','cuanto perdi','perdí','perder','sí fue rentable',
-      'fue rentable','como me fue','como quedé','como quedo','resultado final','cierre de proyecto'
-    ],
+    tags:['rentabilidad','margen','roi','ganancia','utilidad','resultado','real vs presupuestado','como me fue','cierre','cerrar proyecto','fue rentable'],
     title:'Análisis de Rentabilidad Real vs Presupuestada',
-    prompt:`Eres CFO de una empresa constructora. Con los datos: [INGRESOS REALES vs PRESUPUESTADOS], [COSTOS DIRECTOS REALES vs PRESUPUESTADOS por partida], [COSTOS INDIRECTOS], [PLAZO REAL vs PROGRAMADO].
+    prompt:`Eres CFO constructora. Datos: [INGRESOS REALES vs PRESUP], [COSTOS DIRECTOS por partida], [INDIRECTOS], [PLAZO REAL vs PROG]:
 
-Genera análisis financiero comparativo:
+1. P&L COMPARATIVO: Presupuestado | Real | Variación $ | % por línea.
+2. VARIACIONES: Causa por cada desviación >5% (precio / volumen / eficiencia / alcance).
+3. KPIs: CPI, SPI, margen neto real vs meta.
+4. IMPACTO PLAZO: Costo días adicionales en indirectos y financiamiento.
+5. DATOS GRÁFICA: Barras presupuesto vs real por partida principal.
+6. LECCIONES: 5 puntos para mejorar rentabilidad en proyectos futuros.
+7. PARÁMETROS: Nuevos % recomendados de indirectos, financiamiento y utilidad.
 
-1. ESTADO DE RESULTADOS COMPARATIVO: Presupuestado | Real | Variación $ | Variación % por línea.
-2. ANÁLISIS DE VARIACIONES: Causa por cada desviación >5% (precio, volumen, eficiencia, alcance).
-3. INDICADORES: CPI, SPI, margen neto real vs meta.
-4. IMPACTO DEL PLAZO: Costo de días adicionales en indirectos y financiamiento.
-5. DATOS PARA GRÁFICA: Barras presupuesto vs real por partida principal.
-6. LECCIONES APRENDIDAS: 5 puntos para mejorar rentabilidad en proyectos futuros.
-7. AJUSTE DE PARÁMETROS: Nuevos % de indirectos, financiamiento y utilidad recomendados.
-
-Formato dashboard financiero para presentación a socios.`
+Dashboard financiero para socios.`
   },
   {
-    id:'logistica_1', dept:'logistica',
-    tags:[
-      'orden de compra','orden','compra','compras','proveedor','requisicion','requisición',
-      'material','materiales','pedido','pedir','generar orden','hacer orden','solicitar',
-      'necesito materiales','faltan materiales','requerir','requerimiento'
-    ],
+    id:'presup_6', dept:'presupuesto',
+    tags:['estimacion','estimación','estimacion de cobro','cobro','valuar','valuacion','valuación','generador de estimacion','pago','cobrar','avance para cobro'],
+    title:'Generador de Estimación de Cobro',
+    prompt:`Eres residente de obra especialista en estimaciones. Con los datos de avance [FRENTES DE TRABAJO, % AVANCE, CANTIDADES EJECUTADAS]:
+
+1. PORTADA: Número estimación, periodo, proyecto, contratista, cliente.
+2. CUERPO: Concepto | Unidad | Cantidad contratada | Ejecutada anterior | Ejecutada este periodo | Acumulada | P.U. | Importe.
+3. RESUMEN: Monto bruto, deducciones (anticipo, garantía, retenciones), IVA, monto neto a cobrar.
+4. COMPARATIVO: Avance físico vs avance financiero — detecta si hay desfase.
+5. SOPORTE: Lista de documentos que deben acompañar la estimación (bitácoras, pruebas, fotos).
+6. OBSERVACIONES: Conceptos pendientes por autorizar o con conflicto.
+
+Formato oficial lista para firma y envío a cliente.`
+  },
+  {
+    id:'presup_7', dept:'presupuesto',
+    tags:['catalogo','catálogo','catalogo de conceptos','catalogo de obra','presupuesto base','presupuesto inicial','elaborar presupuesto','nuevo presupuesto','hacer presupuesto'],
+    title:'Elaboración de Catálogo de Conceptos de Obra',
+    prompt:`Actúa como presupuestador con experiencia en obra [TIPO: civil/vertical/infraestructura]. Para el proyecto [NOMBRE] con alcance [DESCRIPCIÓN]:
+
+1. ESTRUCTURA: Organiza el catálogo por especialidades (preliminares, cimentación, estructura, albañilería, instalaciones, acabados, exteriores).
+2. CONCEPTOS: Para cada especialidad lista los conceptos típicos con: Clave | Descripción | Unidad de medida.
+3. CRITERIOS DE MEDICIÓN: Cómo se cuantifica cada concepto (m², m³, kg, pieza, lote).
+4. CONCEPTOS FRECUENTEMENTE OLVIDADOS: Lista de conceptos que suelen omitirse en este tipo de obra.
+5. ORDEN LÓGICO: Secuencia de ejecución recomendada.
+6. NOTAS GENERALES: Consideraciones especiales para el proyecto.
+
+Formato Excel listo para agregar cantidades y precios.`
+  },
+  {
+    id:'presup_8', dept:'presupuesto',
+    tags:['explosión de insumos','explosion de insumos','materiales','cuanto material','cantidad de material','insumos','lista de materiales','material necesario','calcular material'],
+    title:'Explosión de Insumos y Lista de Materiales',
+    prompt:`Eres residente especialista en cuantificación. Para la obra [NOMBRE] con los siguientes conceptos y cantidades: [LISTADO]:
+
+1. EXPLOSIÓN: Por cada concepto → materiales necesarios con cantidad, unidad y factor de desperdicio aplicado.
+2. CONSOLIDADO: Suma total de cada material en toda la obra (sin duplicados).
+3. AGRUPACIÓN: Por especialidad (estructura, acabados, instalaciones, etc.).
+4. PROGRAMA DE SUMINISTRO: Semana o mes en que se necesita cada material según el programa de obra.
+5. LISTA DE COMPRAS: Formato orden de compra con descripción técnica completa.
+6. ALERTAS: Materiales de largo tiempo de entrega que hay que pedir con anticipación.
+
+Formato tabla lista para importar a sistema de compras.`
+  },
+  {
+    id:'presup_9', dept:'presupuesto',
+    tags:['concurso','licitacion','licitación','propuesta economica','propuesta económica','concursar','ganar licitacion','oferta economica','oferta económica'],
+    title:'Estrategia de Precio para Licitación',
+    prompt:`Eres director de presupuestos con experiencia en licitaciones públicas y privadas. Para el concurso [NOMBRE], presupuesto referencial [MONTO], competidores probables [PERFIL]:
+
+1. ANÁLISIS DE MERCADO: Rango probable de precios de competidores basado en tipo de obra.
+2. ESTRATEGIA DE PRECIO: Precio objetivo con margen recomendado según riesgo del proyecto.
+3. PARTIDAS ANCLA: Conceptos donde conviene ser más agresivo en precio para ganar.
+4. PARTIDAS DE UTILIDAD: Conceptos donde recuperar margen sin afectar competitividad.
+5. ANÁLISIS DE RIESGO: Partidas con mayor incertidumbre de precio — cómo protegerse.
+6. PRECIO DE RESERVA: Mínimo precio al que sería rentable ejecutar la obra.
+7. CHECKLIST LICITACIÓN: Documentos y requisitos típicos que no deben faltar.
+
+Estrategia ejecutiva para toma de decisión de la dirección.`
+  },
+  {
+    id:'presup_10', dept:'presupuesto',
+    tags:['numero de generatriz','generatriz','desglose de cantidades','cuantificacion','cuantificación','medir','medicion','medición','tomar cantidades','metrado'],
+    title:'Cuantificación y Número de Generatriz',
+    prompt:`Actúa como residente cuantificador. Para el elemento [DESCRIPCIÓN] en el proyecto [NOMBRE], con las siguientes dimensiones de planos [DATOS]:
+
+1. PROCEDIMIENTO: Fórmulas y criterio de medición aplicado.
+2. TABLA DE CÁLCULO: Eje/zona | Dimensión | Cantidad parcial | Total por eje | Total general.
+3. NÚMERO DE GENERATRIZ: Tabla formal con número, fecha, descripción, resultado y referencia de plano.
+4. RESUMEN: Total por unidad de medida con desglose por nivel/frente.
+5. AJUSTES: Descuentos o adiciones típicas (huecos, traslapes, desperdicios).
+6. VALIDACIÓN: Comparación con estimación paramétrica para detectar errores.
+
+Formato oficial para soporte de estimaciones y control de obra.`
+  },
+
+  // ══════════════════════════════════════════════
+  // LOGÍSTICA Y COMPRAS (6 prompts)
+  // ══════════════════════════════════════════════
+  {
+    id:'log_1', dept:'logistica',
+    tags:['orden de compra','orden','compra','requisicion','requisición','material','pedido','generar orden','solicitar','necesito materiales'],
     title:'Generador de Orden de Compra Profesional',
-    prompt:`Actúa como jefe de compras de empresa constructora. Con la requisición: [LISTA DE MATERIALES CON CANTIDADES Y ESPECIFICACIONES].
+    prompt:`Jefe de compras de constructora. Requisición: [LISTA MATERIALES CON CANTIDADES Y ESPECIFICACIONES]:
 
-Genera la orden de compra formal:
-
-1. ENCABEZADO: Número OC, fecha, vigencia, datos proveedor y proyecto.
+1. ENCABEZADO: Número OC, fecha, vigencia, proveedor, proyecto.
 2. CUERPO: Descripción técnica | Unidad | Cantidad | P.U. | Importe | Partida presupuestal.
-3. CONDICIONES COMERCIALES: Forma de pago, plazo de crédito, descuentos.
-4. CONDICIONES DE ENTREGA: Lugar, fecha, empaque, etiquetado, responsable.
-5. CLÁUSULAS DE CALIDAD: Normas, inspección, criterios de rechazo.
-6. PENALIZACIONES: Por entrega tardía o material fuera de especificación.
+3. CONDICIONES COMERCIALES: Pago, crédito, descuentos.
+4. ENTREGA: Lugar, fecha, empaque, etiquetado, responsable.
+5. CALIDAD: Normas aplicables, inspección, criterios rechazo.
+6. PENALIZACIONES: Entrega tardía o material fuera de spec.
 7. DOCUMENTACIÓN: Factura, remisión, certificados requeridos.
 
-Formato PDF-ready con totales e IVA desglosado.`
+Formato profesional con totales e IVA desglosado.`
   },
   {
-    id:'logistica_2', dept:'logistica',
-    tags:[
-      'evaluar','evaluacion','evaluación','evalua','ranking','rank','calificar','calificacion',
-      'calificación','desempeño','proveedor','proveedores','quien es mejor','mejor proveedor',
-      'confiable','cumple','no cumple','mal proveedor','buen proveedor','historial'
-    ],
+    id:'log_2', dept:'logistica',
+    tags:['evaluar proveedor','evaluacion','evaluación','ranking','calificar','desempeño proveedor','mejor proveedor','confiable','historial proveedor'],
     title:'Evaluación y Ranking de Proveedores',
-    prompt:`Eres especialista en gestión de proveedores. Con los datos: [NOMBRE PROVEEDOR], [HISTORIAL ENTREGAS: fechas prometidas vs reales], [INCIDENCIAS DE CALIDAD], [PRECIOS VS MERCADO], [SERVICIO POSTVENTA].
+    prompt:`Especialista en gestión de proveedores. Datos: [NOMBRE], [HISTORIAL ENTREGAS], [INCIDENCIAS CALIDAD], [PRECIOS VS MERCADO], [SERVICIO]:
 
-Genera evaluación completa:
-
-1. SCORECARD: Criterio | Peso | Calificación (1-10) | Ponderado → puntualidad (25%), calidad (30%), precio (25%), servicio (15%), documentación (5%).
-2. CALIFICACIÓN FINAL: Porcentaje y categoría A/B/C/D.
-3. COMPARATIVO: Vs promedio de la categoría.
-4. FORTALEZAS Y ÁREAS DE MEJORA: Top 3 de cada uno con evidencia.
-5. CLASIFICACIÓN: Estratégico / Confiable / En desarrollo / A eliminar.
-6. PLAN DE ACCIÓN: 3 compromisos de mejora con fecha y responsable.
-7. RECOMENDACIÓN: Mantener, desarrollar, sustituir o descalificar con justificación.`
+1. SCORECARD: puntualidad 25% | calidad 30% | precio 25% | servicio 15% | documentación 5%.
+2. CALIFICACIÓN: A(90-100%) / B(75-89%) / C(60-74%) / D(<60%).
+3. COMPARATIVO: Vs promedio de su categoría.
+4. FORTALEZAS Y MEJORAS: Top 3 de cada uno con evidencia.
+5. CLASIFICACIÓN: Estratégico / Confiable / En desarrollo / Eliminar.
+6. PLAN DE ACCIÓN: 3 compromisos con fecha y responsable.
+7. RECOMENDACIÓN FINAL: Mantener, desarrollar o descalificar.`
   },
   {
-    id:'obra_1', dept:'obra',
-    tags:['bitacora','bitácora','reporte diario','actividades','dia','día','registro','obra','avance diario'],
-    title:'Generador de Bitácora de Obra Oficial',
-    prompt:`Eres residente de obra. Con los datos del día: [FECHA], [PROYECTO], [PERSONAL POR CATEGORÍA Y CANTIDAD], [ACTIVIDADES EJECUTADAS POR FRENTE], [MAQUINARIA EN SITIO], [CONDICIONES CLIMÁTICAS], [INCIDENCIAS O ACUERDOS].
+    id:'log_3', dept:'logistica',
+    tags:['inventario','almacen','almacén','stock','control de materiales','kardex','entrada','salida','existencias','bodega'],
+    title:'Control de Inventario y Almacén de Obra',
+    prompt:`Eres almacenista jefe de obra. Con los movimientos del periodo [ENTRADAS Y SALIDAS DE MATERIALES]:
 
-Genera la nota de bitácora oficial:
+1. KARDEX: Material | Stock inicial | Entradas | Salidas | Stock final | Ubicación.
+2. ALERTAS DE STOCK: Materiales por debajo del mínimo de seguridad.
+3. MATERIALES SIN MOVIMIENTO: Posible obsolescencia o sobrecompra.
+4. ANÁLISIS ABC: Clasifica materiales por valor (A: 80% del valor, B: 15%, C: 5%).
+5. MERMAS Y DESPERDICIOS: Diferencia entre lo consumido teórico vs real.
+6. RECOMENDACIONES: Puntos de reorden y cantidades óptimas de compra.
+7. REPORTE PARA DIRECCIÓN: Valor total del inventario y rotación.
 
-1. ENCABEZADO: Proyecto, número de nota, fecha, clima, temperatura.
-2. PERSONAL EN SITIO: Tabla por categoría con cantidad y empresa.
-3. MAQUINARIA Y EQUIPO: En operación y en espera.
-4. ACTIVIDADES EJECUTADAS: Por frente — descripción técnica con ubicación (eje/nivel/zona).
-5. AVANCE ESTIMADO: % por partida ejecutada hoy.
-6. INCIDENCIAS: Descripción, causa, impacto en programa/costo, acuerdo tomado.
-7. INSTRUCCIONES PARA MAÑANA: Actividades programadas y recursos necesarios.
-
-Redacción técnica formal, lista para firma.`
+Formato para sistema de control de obra.`
   },
   {
-    id:'obra_2', dept:'obra',
-    tags:['reporte semanal','informe semanal','avance semanal','semana','programa','cliente','ejecutivo'],
-    title:'Reporte de Avance Semanal para Cliente',
-    prompt:`Como superintendente de obra, con los datos de la semana [NÚMERO] del proyecto [NOMBRE]: [ACTIVIDADES EJECUTADAS], [% AVANCE POR PARTIDA], [PERSONAL PROMEDIO], [INCIDENCIAS].
+    id:'log_4', dept:'logistica',
+    tags:['programa de compras','plan de compras','cuando comprar','anticipar compras','planeación de materiales','abastecimiento','suministro'],
+    title:'Programa de Abastecimiento de Materiales',
+    prompt:`Como jefe de logística, con el programa de obra [ACTIVIDADES Y FECHAS] y los materiales requeridos [LISTA]:
 
-Genera el reporte ejecutivo semanal:
+1. PROGRAMA: Material | Cantidad | Fecha requerida en obra | Fecha límite de compra | Proveedor sugerido | Lead time.
+2. RUTA CRÍTICA DE COMPRAS: Materiales cuyo retraso impacta la ruta crítica de obra.
+3. MATERIALES DE LARGO PLAZO: Especiales, importados o de fabricación bajo pedido.
+4. COMPRAS CONSOLIDADAS: Oportunidades de agrupar compras para obtener mejor precio.
+5. PRESUPUESTO DE COMPRAS: Monto estimado por semana/mes.
+6. INDICADORES: % de pedidos a tiempo, % de rechazos, costo de urgencias.
 
-1. RESUMEN EJECUTIVO: 3 líneas con estado general, logros y alertas.
-2. AVANCE FÍSICO: Partida — Programado acumulado | Real acumulado | Variación.
-3. CURVA S: Datos para graficar avance programado vs real semana a semana.
-4. ACTIVIDADES CRÍTICAS: Ruta crítica próxima semana con responsables.
-5. RIESGOS IDENTIFICADOS: Probabilidad, impacto y mitigación.
-6. COMPROMISOS: Pendientes anteriores + nuevos generados esta semana.
-
-Formato presentable para cliente y Dirección.`
+Formato Gantt de compras listo para Excel.`
   },
   {
-    id:'rh_1', dept:'rh',
-    tags:['descripcion','descripción','puesto','perfil','empleado','cargo','contratacion','reclutamiento','crear'],
-    title:'Descripción de Puesto para Empresa Constructora',
-    prompt:`Eres director de RRHH en empresa constructora de 200 empleados. Crea la descripción completa para [NOMBRE DEL PUESTO] que reporta a [JEFE DIRECTO].
+    id:'log_5', dept:'logistica',
+    tags:['devolucion','devolución','rechazo','material rechazado','no conformidad','defecto','calidad material','mala calidad'],
+    title:'Gestión de No Conformidades y Devoluciones',
+    prompt:`Eres inspector de calidad de materiales. Para el siguiente material rechazado: [MATERIAL, PROVEEDOR, MOTIVO, CANTIDAD]:
 
-Genera el perfil completo:
+1. REPORTE DE NO CONFORMIDAD: Descripción del defecto, evidencia fotográfica requerida, norma incumplida.
+2. IMPACTO EN OBRA: Actividades afectadas y días de retraso potencial.
+3. ACCIÓN INMEDIATA: Segregar material, notificar proveedor, buscar alternativa.
+4. CARTA AL PROVEEDOR: Texto formal de rechazo con referencia a contrato/OC.
+5. PROCESO DE DEVOLUCIÓN: Pasos logísticos para devolver el material.
+6. PENALIZACIÓN: Cálculo de penalización según contrato.
+7. LECCIÓN APRENDIDA: Criterio de inspección a agregar en futuras OC.
 
-1. IDENTIFICACIÓN: Nombre, área, nivel jerárquico, fecha.
-2. OBJETIVO DEL PUESTO: Razón de ser en 2 líneas.
-3. RESPONSABILIDADES: 10-12 actividades específicas del rol en construcción.
-4. PERFIL REQUERIDO: Educación | Carreras afines | Experiencia en años | Experiencia en construcción.
-5. CONOCIMIENTOS TÉCNICOS: Software (AutoCAD, Revit, Project, Excel), normas, reglamentos.
-6. COMPETENCIAS CONDUCTUALES: 5 competencias con nivel esperado.
-7. RELACIONES: Internas y externas (proveedores, clientes, autoridades).
-8. CONDICIONES: Viajes, horario, obra/oficina, EPP.
-9. RANGO SALARIAL: Estimado en mercado de construcción en México.
-
-Formato para Manual de Organización corporativo.`
+Documentación formal para expediente del proveedor.`
   },
   {
-    id:'finanzas_1', dept:'finanzas',
-    tags:['rentabilidad real','comparado','presupuestado','financiero','estado','resultados','proyecto','ganancia'],
-    title:'Dashboard Financiero de Proyectos Activos',
-    prompt:`Como controller financiero, con los datos mensuales de todos los proyectos activos: [DATOS POR PROYECTO].
+    id:'log_6', dept:'logistica',
+    tags:['transporte','flete','logística','maquinaria','equipo','renta','rentar','arrendar','acarreo'],
+    title:'Análisis de Renta de Maquinaria y Equipo',
+    prompt:`Jefe de maquinaria en empresa constructora. Para el equipo requerido [TIPO, CAPACIDAD, HORAS ESTIMADAS]:
 
-Genera el reporte ejecutivo mensual:
+1. COMPARATIVO RENTA VS COMPRA: Costo total de renta vs costo anualizado de compra.
+2. COTIZACIÓN IDEAL: Especificaciones técnicas mínimas para solicitar a arrendadoras.
+3. TABLA COMPARATIVA: Arrendadora | Equipo | Tarifa/hora | Tarifa/mes | Incluye operador | Incluye mantenimiento | Score.
+4. COSTO TOTAL: Renta + combustible + operador + mantenimiento estimado.
+5. CLÁUSULAS CLAVE: Lo que debe incluir el contrato de arrendamiento.
+6. RENDIMIENTO ESPERADO: Producción estimada por hora/día y costo por unidad producida.
 
-1. RESUMEN: Facturación y cobranza del mes.
-2. TABLA DE RENTABILIDAD: Proyecto | Ingresos | Costos | Margen $ | Margen %.
-3. PROYECTOS EN RIESGO: Margen <5% con análisis de causa.
-4. CARTERA: Clientes con días de crédito promedio.
-5. PROYECCIÓN: Flujo próximos 3 meses.
-6. KPIs: Margen promedio, días de cobro, rotación de cartera.
-
-Formato dashboard para Dirección General.`
+Formato para autorización de dirección.`
   },
-  {
-    id:'legal_1', dept:'legal',
-    tags:['contrato','revisar','riesgo','clausula','cláusula','proveedor','cliente','legal','identificar'],
-    title:'Revisión de Contrato con Identificación de Riesgos',
-    prompt:`Eres abogado especialista en contratos de construcción. Revisa el siguiente contrato: [PEGAR TEXTO O CLÁUSULAS CLAVE].
 
-Genera análisis jurídico preliminar:
-
-1. RESUMEN EJECUTIVO: Tipo, partes, objeto, monto y plazo en 5 líneas.
-2. MAPA DE OBLIGACIONES: Obligación | Responsable | Fecha/condición | Consecuencia.
-3. CLÁUSULAS DE RIESGO: Identificar y calificar (alto/medio/bajo) en: penalizaciones, garantías, rescisión, limitación de responsabilidad, jurisdicción.
-4. CLÁUSULAS AUSENTES: Que deberían incluirse para proteger a Grupo Senda.
-5. PUNTOS DE NEGOCIACIÓN: Top 5 cláusulas a renegociar con propuesta alternativa.
-6. SEMÁFORO GLOBAL: Bajo / Medio / Alto riesgo con justificación.
-7. ACCIONES: Pasos antes de firmar.
-
-Nota: Orientación preliminar. Consultar con abogado para decisión final.`
-  },
+  // ══════════════════════════════════════════════
+  // ARQUITECTURA (5 prompts)
+  // ══════════════════════════════════════════════
   {
     id:'arq_1', dept:'arquitectura',
-    tags:['especificaciones','tecnicas','técnicas','partida','normas','calidad','materiales','generar','constructivo'],
+    tags:['especificaciones','especificacion','técnicas','tecnicas','partida','normas','calidad','materiales','constructivo'],
     title:'Especificaciones Técnicas para Partida de Obra',
-    prompt:`Eres arquitecto especialista en especificaciones técnicas. Para la partida: [NOMBRE], proyecto: [TIPO].
-
-Genera especificaciones completas:
+    prompt:`Arquitecto especialista en specs técnicas. Partida: [NOMBRE], Proyecto: [TIPO]:
 
 1. ALCANCE: Trabajo incluido y excluido.
 2. NORMAS: NMX, NOM, ACI, ASTM, NTC y reglamentos locales vigentes.
-3. MATERIALES: Especificación técnica, marcas aceptadas, equivalencias.
+3. MATERIALES: Especificación, marcas aceptadas, equivalencias.
 4. PROCEDIMIENTO: Paso a paso con preparación, mezclas, tiempos y condiciones.
 5. CONTROL DE CALIDAD: Pruebas, frecuencia, tolerancias, aceptación/rechazo.
 6. SEGURIDAD: EPP y medidas específicas.
 7. MEDICIÓN Y PAGO: Unidad, cuantificación, conceptos incluidos.
 
-Redacción técnica formal para libro de especificaciones del proyecto.`
+Redacción técnica para libro de especificaciones.`
+  },
+  {
+    id:'arq_2', dept:'arquitectura',
+    tags:['revision de proyecto','revisar proyecto','inconsistencias','planos','coordinar','compatibilizar','clash','errores en planos','revision de planos'],
+    title:'Revisión y Compatibilización de Proyecto Ejecutivo',
+    prompt:`Coordinador BIM / director de proyecto. Revisando el proyecto [NOMBRE] con las disciplinas: [ARQUITECTURA, ESTRUCTURA, INSTALACIONES]:
+
+1. CHECKLIST DE ENTREGABLES: Documentos requeridos por disciplina y su estado (completo/pendiente/faltante).
+2. INCOMPATIBILIDADES: Listado de conflictos entre disciplinas con severidad (crítico/mayor/menor).
+3. OBSERVACIONES POR DISCIPLINA: Tabla — disciplina | plano | observación | responsable | fecha límite.
+4. DUDAS DE CONSTRUCTABILIDAD: Elementos difíciles de construir o con falta de detalle.
+5. FALTANTES CRÍTICOS: Detalles o especificaciones sin los que no se puede construir.
+6. % COMPLETITUD: Por disciplina y del proyecto en general.
+7. ACTA DE REVISIÓN: Formato formal con firmas de corresponsables.
+
+Formato para reunión de coordinación técnica.`
+  },
+  {
+    id:'arq_3', dept:'arquitectura',
+    tags:['memoria','memoria descriptiva','memoria de proyecto','descripcion del proyecto','descripción del proyecto','narrar proyecto','explicar proyecto'],
+    title:'Memoria Descriptiva del Proyecto',
+    prompt:`Arquitecto proyectista. Para el proyecto [NOMBRE] con los siguientes datos [PROGRAMA ARQUITECTÓNICO, ÁREA, UBICACIÓN]:
+
+1. DATOS GENERALES: Nombre, ubicación, superficie, uso, cliente, fecha.
+2. CONCEPTO ARQUITECTÓNICO: Idea generatriz y partido arquitectónico.
+3. DESCRIPCIÓN POR ÁREAS: Zonificación, programa y características de cada espacio.
+4. SISTEMAS CONSTRUCTIVOS: Estructura, muros, cubiertas, acabados propuestos.
+5. INSTALACIONES: Hidrosanitaria, eléctrica, especiales — concepto general.
+6. SUSTENTABILIDAD: Estrategias bioclimáticas y de ahorro energético.
+7. NORMATIVIDAD: Cumplimiento con reglamento de construcción local y normas aplicables.
+8. SUPERFICIES: Tabla de áreas por nivel y totales.
+
+Redacción formal para expediente de licencia y presentación a cliente.`
+  },
+  {
+    id:'arq_4', dept:'arquitectura',
+    tags:['licencia','tramite','trámite','permiso','uso de suelo','municipio','autorización','gestoria','gestión'],
+    title:'Gestión de Trámites y Licencias de Construcción',
+    prompt:`Especialista en gestión municipal. Para el proyecto [NOMBRE] en [MUNICIPIO/ESTADO]:
+
+1. REQUISITOS: Lista completa de documentos para licencia de construcción en ese municipio.
+2. PROCESO: Pasos en orden cronológico con tiempos estimados por trámite.
+3. COSTOS: Derechos, honorarios y gastos estimados.
+4. RUTA CRÍTICA DE TRÁMITES: Cuáles deben obtenerse primero y cuáles son paralelos.
+5. DOCUMENTOS TÉCNICOS: Planos y memorias que exige la autoridad con sus requisitos de presentación.
+6. RIESGOS: Causas comunes de rechazo y cómo evitarlas.
+7. DIRECTORIO: Dependencias involucradas y sus datos de contacto (guía general).
+
+Checklist ejecutivo para gestores y directores de proyecto.`
+  },
+  {
+    id:'arq_5', dept:'arquitectura',
+    tags:['programa arquitectonico','programa arquitectónico','necesidades','espacios','areas','áreas','metros cuadrados','cuantos m2','cuanto espacio'],
+    title:'Programa Arquitectónico y Necesidades de Espacio',
+    prompt:`Arquitecto programador. Para el proyecto [TIPO: oficinas/vivienda/hospital/comercial] con [NÚMERO DE USUARIOS/CAPACIDAD]:
+
+1. DIAGNÓSTICO DE NECESIDADES: Actividades a realizar y requerimientos funcionales.
+2. PROGRAMA ARQUITECTÓNICO: Espacio | Actividad | Capacidad | Área neta m² | Área bruta m² | Relaciones.
+3. MATRIZ DE RELACIONES: Qué espacios deben estar contiguos vs separados.
+4. COMPARATIVO NORMATIVO: Áreas mínimas reglamentarias vs programa propuesto.
+5. DIAGRAMA DE FLUJOS: Circulaciones de usuarios, personal y servicios.
+6. RESUMEN DE SUPERFICIES: Área construida, de servicios, circulaciones y totales.
+7. OBSERVACIONES: Espacios con requerimientos especiales (altura, carga, ventilación).
+
+Formato para inicio de diseño y presentación a cliente.`
+  },
+
+  // ══════════════════════════════════════════════
+  // DISEÑO (4 prompts)
+  // ══════════════════════════════════════════════
+  {
+    id:'dis_1', dept:'diseno',
+    tags:['concepto','concepto de diseño','diseño','idea','estilo','acabados','materiales de acabado','presentar cliente','propuesta de diseño'],
+    title:'Concepto de Diseño y Memoria Creativa',
+    prompt:`Director creativo de arquitectura interior. Proyecto [NOMBRE], perfil cliente: [DESCRIPCIÓN]:
+
+1. CONCEPTO: Nombre del concepto, inspiración y palabras clave.
+2. PALETA DE MATERIALES: Pisos | Muros | Plafones | Carpintería — opción A (premium) y B (estándar).
+3. PALETA DE COLOR: Colores principales, secundarios y de acento con códigos Pantone/RAL.
+4. EXPERIENCIA ESPACIAL: Descripción sensorial de cómo vivirá el usuario cada espacio.
+5. REFERENCIAS: 5 proyectos de referencia con justificación.
+6. TABLA DE MATERIALES: Material | Proveedor sugerido | Precio/m² estimado | Partida.
+7. ESTIMADO DE ACABADOS: Costo por m² de construcción para este nivel de acabados.
+
+Presentación formal para cliente.`
+  },
+  {
+    id:'dis_2', dept:'diseno',
+    tags:['brief','brief de diseño','encargo','requerimientos','que quiere el cliente','necesidades del cliente','definir proyecto'],
+    title:'Brief de Diseño con el Cliente',
+    prompt:`Coordinador de proyectos de diseño. Para la reunión inicial con [CLIENTE]:
+
+1. PERFIL DEL CLIENTE: Quién es, su negocio, valores y cultura corporativa/personal.
+2. PROGRAMA: Espacios requeridos, capacidades y funciones.
+3. ESTILO Y REFERENCIAS: Imágenes o proyectos que le gustan/no le gustan y por qué.
+4. RESTRICCIONES: Presupuesto, plazos, normativas especiales.
+5. PRIORIDADES: Qué es innegociable para el cliente (jerarquía de valores).
+6. PROCESO DE APROBACIÓN: Quién decide, cuántas personas deben aprobar, proceso de revisión.
+7. EXPECTATIVAS DE ENTREGABLES: Qué espera recibir y cuándo.
+8. PREGUNTAS CLAVE: 10 preguntas que el diseñador debe hacerle al cliente en la primera reunión.
+
+Formato guía para primera reunión de proyecto.`
+  },
+  {
+    id:'dis_3', dept:'diseno',
+    tags:['moodboard','tablero de inspiracion','tablero','inspiracion','referencias visuales','tendencias','estilo arquitectonico','paleta'],
+    title:'Guía de Estilo y Paleta de Diseño',
+    prompt:`Director de diseño. Para el proyecto [NOMBRE] con el concepto [CONCEPTO ELEGIDO]:
+
+1. ESTILO DEFINIDO: Nombre, características principales y ejemplos de referencia.
+2. PALETA DE MATERIALES: Por área — descripción técnica, acabado, textura y brillo.
+3. PALETA DE COLOR: Proporción de uso (dominante 60%, secundario 30%, acento 10%).
+4. TIPOGRAFÍAS Y GRÁFICA (si aplica): Para señalética, branding del espacio.
+5. ILUMINACIÓN: Tipo de luz por espacio (temperatura de color, CRI, nivel de ilux).
+6. MOBILIARIO: Estilo, línea y referencias de mobiliario que van con el concepto.
+7. ERRORES A EVITAR: Combinaciones o elementos que romperían el concepto.
+
+Documento guía para todo el equipo de diseño y obra.`
+  },
+  {
+    id:'dis_4', dept:'diseno',
+    tags:['presentacion','presentación','cliente','show room','render','3d','entrega diseño','aprobar diseño','presentar proyecto'],
+    title:'Estructura de Presentación de Diseño para Cliente',
+    prompt:`Eres director de proyecto de diseño. Para presentar el proyecto [NOMBRE] al cliente [PERFIL]:
+
+1. ESTRUCTURA DE PRESENTACIÓN: Orden recomendado de slides/láminas (10-15 hojas máximo).
+2. CONTENIDO POR LÁMINA: Qué mostrar en cada hoja y con qué tipo de imagen.
+3. NARRATIVA: Guión de lo que decir en cada parte — cómo contar la historia del diseño.
+4. MANEJO DE OBJECIONES: Las 5 objeciones más comunes de clientes y cómo responderlas.
+5. CIERRE: Cómo cerrar la presentación y lograr la aprobación.
+6. MATERIALES DE APOYO: Qué llevar físico a la reunión (muestras, maquetas, etc.).
+7. PRÓXIMOS PASOS: Cómo plantear el plan de trabajo post-aprobación.
+
+Guía para presentación exitosa.`
+  },
+
+  // ══════════════════════════════════════════════
+  // SUPERVISIÓN DE OBRA (5 prompts)
+  // ══════════════════════════════════════════════
+  {
+    id:'obra_1', dept:'obra',
+    tags:['bitacora','bitácora','reporte diario','actividades','dia','día','registro','avance diario','nota de bitácora'],
+    title:'Nota de Bitácora de Obra Oficial',
+    prompt:`Residente de obra. Datos del día: [FECHA], [PROYECTO], [PERSONAL POR CATEGORÍA], [ACTIVIDADES POR FRENTE], [MAQUINARIA], [CLIMA], [INCIDENCIAS]:
+
+1. ENCABEZADO: Proyecto, nota número, fecha, clima, temperatura.
+2. PERSONAL: Tabla por categoría con cantidad y empresa.
+3. MAQUINARIA: En operación y en espera.
+4. ACTIVIDADES: Por frente — descripción técnica con eje/nivel/zona.
+5. AVANCE: % por partida ejecutada hoy.
+6. INCIDENCIAS: Descripción, causa, impacto y acuerdo.
+7. INSTRUCCIONES MAÑANA: Actividades y recursos.
+
+Redacción técnica formal lista para firma.`
+  },
+  {
+    id:'obra_2', dept:'obra',
+    tags:['reporte semanal','informe semanal','avance semanal','semana','reporte a cliente','informe ejecutivo'],
+    title:'Reporte Semanal de Avance para Cliente',
+    prompt:`Superintendente de obra. Semana [N], proyecto [NOMBRE]: [ACTIVIDADES], [% AVANCE POR PARTIDA], [PERSONAL], [INCIDENCIAS]:
+
+1. EJECUTIVO: 3 líneas — estado, logros, alertas.
+2. AVANCE FÍSICO: Partida | Programado acumulado | Real acumulado | Variación.
+3. CURVA S: Datos para gráfica programado vs real.
+4. RUTA CRÍTICA: Actividades críticas próxima semana con responsables.
+5. RIESGOS: Probabilidad, impacto y mitigación.
+6. COMPROMISOS: Pendientes anteriores + nuevos.
+
+Formato presentable para cliente y Dirección.`
+  },
+  {
+    id:'obra_3', dept:'obra',
+    tags:['programa de obra','programar','cronograma','programa','fechas','cuando termina','plazo','ruta critica','ruta crítica','diagrama'],
+    title:'Programa de Obra y Ruta Crítica',
+    prompt:`Director de proyecto de construcción. Para la obra [NOMBRE] con las siguientes actividades [LISTADO] y restricciones [FECHAS CLAVE]:
+
+1. LISTA DE ACTIVIDADES: Actividad | Duración | Predecesoras | Responsable | Recursos.
+2. RUTA CRÍTICA: Actividades en la ruta crítica y holguras de las demás.
+3. HITOS PRINCIPALES: Fechas clave del proyecto (inicio, entregas parciales, terminación).
+4. HISTOGRAMA DE RECURSOS: Personal y maquinaria requerida por semana.
+5. CURVA S PROGRAMADA: Avance acumulado % por semana.
+6. ALERTAS: Actividades con riesgo de retraso y su impacto.
+7. ESTRATEGIAS DE ACELERACIÓN: Si hay retraso, opciones para recuperar el programa.
+
+Datos para importar a Microsoft Project o Excel.`
+  },
+  {
+    id:'obra_4', dept:'obra',
+    tags:['incidente','accidente','seguridad','SST','seguridad en obra','riesgo','equipo de proteccion','EPP','protocolo','emergencia'],
+    title:'Reporte de Incidente y Protocolo de Seguridad',
+    prompt:`Responsable de SST (Seguridad y Salud en el Trabajo). Incidente: [DESCRIPCIÓN, FECHA, INVOLUCRADOS]:
+
+1. REPORTE DE INCIDENTE: Formato oficial — qué pasó, cuándo, dónde, quién, cómo.
+2. CLASIFICACIÓN: Accidente / Incidente / Cuasi accidente — severidad (leve/grave/fatal).
+3. ANÁLISIS DE CAUSA RAÍZ: Método de los 5 Porqués aplicado al incidente.
+4. ACCIONES CORRECTIVAS: Inmediatas, a corto y largo plazo con responsable y fecha.
+5. NOTIFICACIONES OBLIGATORIAS: IMSS, STPS, cliente — qué reportar y en qué plazo.
+6. ACTUALIZACIÓN DE ANÁLISIS DE RIESGO: Qué cambiar en el programa de seguridad.
+7. COMUNICADO A OBRA: Cómo informar al personal para prevenir recurrencia.
+
+Documentación oficial para expediente de seguridad.`
+  },
+  {
+    id:'obra_5', dept:'obra',
+    tags:['calidad','control de calidad','prueba','pruebas','ensayo','laboratorio','resistencia','concreto','compactacion','compactación','rechazo'],
+    title:'Plan de Control de Calidad de Obra',
+    prompt:`Director de calidad de obra. Para el proyecto [NOMBRE] con los frentes activos [LISTADO]:
+
+1. PLAN DE PUNTOS DE INSPECCIÓN (PPI): Actividad | Tipo prueba | Norma | Frecuencia | Criterio aceptación | Responsable.
+2. REGISTRO DE PRUEBAS DEL PERIODO: Fecha | Prueba | Resultado | Valor mínimo | ¿Aprobó? | Acción.
+3. NO CONFORMIDADES ABIERTAS: Descripción | Fecha | Responsable corrección | Fecha cierre.
+4. ESTADÍSTICAS: % pruebas aprobadas, % rechazadas, tendencia.
+5. ALERTAS: Zonas o conceptos con resultados límite que requieren atención.
+6. TRAZABILIDAD: Cómo se lleva el control de los materiales desde la compra hasta la instalación.
+
+Dashboard de calidad para dirección de proyecto.`
+  },
+
+  // ══════════════════════════════════════════════
+  // RECURSOS HUMANOS (4 prompts)
+  // ══════════════════════════════════════════════
+  {
+    id:'rh_1', dept:'rh',
+    tags:['descripcion de puesto','descripción de puesto','perfil','puesto','cargo','reclutamiento','contratar','vacante'],
+    title:'Descripción de Puesto para Empresa Constructora',
+    prompt:`Director RRHH constructora 200 empleados. Puesto: [NOMBRE], reporta a: [JEFE]:
+
+1. IDENTIFICACIÓN: Nombre, área, nivel jerárquico, fecha.
+2. OBJETIVO: Razón de ser en 2 líneas.
+3. RESPONSABILIDADES: 10-12 actividades específicas en construcción.
+4. PERFIL: Educación | Carreras | Experiencia años | Experiencia construcción.
+5. CONOCIMIENTOS: Software (AutoCAD, Revit, Project, Excel), normas.
+6. COMPETENCIAS: 5 conductuales con nivel esperado.
+7. RELACIONES: Internas y externas.
+8. CONDICIONES: Viajes, horario, obra/oficina, EPP.
+9. RANGO SALARIAL: Mercado construcción México.
+
+Formato Manual de Organización corporativo.`
+  },
+  {
+    id:'rh_2', dept:'rh',
+    tags:['evaluacion de desempeño','evaluación de desempeño','evaluar empleado','calificar empleado','360','feedback empleado','revision anual'],
+    title:'Evaluación de Desempeño 360° para Obra',
+    prompt:`Especialista en gestión del talento. Evalúa a [NOMBRE] en el puesto [PUESTO]:
+
+1. CRITERIOS TÉCNICOS (60%): KPIs específicos del rol en construcción con escala 1-5.
+2. COMPETENCIAS CONDUCTUALES (25%): Liderazgo, trabajo en equipo, comunicación, iniciativa, orientación a resultados.
+3. LOGRO DE OBJETIVOS (15%): Comparativo objetivos pactados vs logrados.
+4. ESCALA: Descriptores conductuales para cada nivel (1=Necesita mejora, 5=Supera expectativas).
+5. FORTALEZAS Y ÁREAS DE DESARROLLO: Evidencias concretas de cada una.
+6. PLAN DE DESARROLLO: 3 acciones con fecha y recursos necesarios.
+7. CONVERSACIÓN DE RETROALIMENTACIÓN: Guía para el jefe directo.
+
+Formato listo para firma y archivo en expediente.`
+  },
+  {
+    id:'rh_3', dept:'rh',
+    tags:['nomina','nómina','calculo de nomina','cálculo de nómina','salario','sueldo','prestaciones','IMSS','finiquito','liquidacion','liquidación'],
+    title:'Cálculo de Nómina y Prestaciones de Ley',
+    prompt:`Especialista en nómina de construcción. Para el trabajador [NOMBRE], puesto [CARGO], salario [MONTO], fechas [INGRESO/BAJA si aplica]:
+
+1. SALARIO DIARIO INTEGRADO: Salario base + parte proporcional de: vacaciones, prima vacacional, aguinaldo, otras prestaciones.
+2. PERCEPCIONES: Desglose de todos los conceptos de pago del periodo.
+3. DEDUCCIONES: IMSS, ISR, descuentos autorizados — con cálculo detallado.
+4. NETO A PAGAR: Percepciones - Deducciones.
+5. CUOTAS PATRONALES: IMSS, INFONAVIT, SAR — costo total para la empresa.
+6. FINIQUITO (si aplica): Partes proporcionales, días trabajados, liquidación si hay.
+7. TABLA RESUMEN: Costo total del trabajador para la empresa.
+
+Nota: Verificar con contador las tasas fiscales vigentes.`
+  },
+  {
+    id:'rh_4', dept:'rh',
+    tags:['clima laboral','comunicado','circular','politica','reglamento','disciplina','conflicto','queja','denuncia'],
+    title:'Comunicado Interno y Política de RRHH',
+    prompt:`Director de RRHH. Para el comunicado/política sobre [TEMA]:
+
+1. DIAGNÓSTICO: Por qué se emite este comunicado — situación que lo origina.
+2. OBJETIVO: Qué se busca lograr con esta política/comunicado.
+3. ALCANCE: A quién aplica y desde cuándo.
+4. CONTENIDO: Reglas, procedimientos o información de forma clara y sin ambigüedad.
+5. CONSECUENCIAS: Qué pasa si no se cumple (si aplica).
+6. CANALES DE DUDA: A quién preguntar si hay dudas.
+7. TONO: Firme pero respetuoso, en lenguaje entendible para personal de obra y oficina.
+
+Formato oficial para publicación y firma de recibido.`
+  },
+
+  // ══════════════════════════════════════════════
+  // FINANZAS (4 prompts)
+  // ══════════════════════════════════════════════
+  {
+    id:'fin_1', dept:'finanzas',
+    tags:['rentabilidad','dashboard financiero','proyectos activos','estado financiero','reporte financiero','mes','mensual','kpis financieros'],
+    title:'Dashboard Financiero Mensual de Proyectos',
+    prompt:`Controller financiero. Datos mensuales proyectos activos: [DATOS POR PROYECTO]:
+
+1. RESUMEN: Facturación y cobranza del mes.
+2. RENTABILIDAD: Proyecto | Ingresos | Costos | Margen $ | Margen %.
+3. RIESGO: Proyectos con margen <5% — análisis de causa.
+4. CARTERA: Clientes con días de crédito promedio y antigüedad de saldo.
+5. PROYECCIÓN: Flujo próximos 3 meses.
+6. KPIs: Margen promedio, días de cobro, rotación cartera.
+
+Dashboard para Dirección General.`
+  },
+  {
+    id:'fin_2', dept:'finanzas',
+    tags:['cobranza','cobrar','cliente moroso','carta de cobro','estado de cuenta','facturacion','facturación','cuentas por cobrar'],
+    title:'Gestión de Cobranza y Cartera de Clientes',
+    prompt:`Director financiero. Cartera de clientes: [LISTADO CON MONTOS Y DÍAS VENCIDOS]:
+
+1. ANÁLISIS DE CARTERA: Cliente | Saldo | Días vencidos | % de la cartera total | Clasificación (vigente/vencida/litigio).
+2. PRIORIZACIÓN: Clientes a gestionar primero por monto e impacto en flujo.
+3. ESTRATEGIA POR SEGMENTO: Acción diferenciada según días vencidos (30/60/90/+90).
+4. CARTA DE COBRO: Tres versiones — recordatorio amable, aviso formal, aviso de acciones legales.
+5. NEGOCIACIÓN: Condiciones mínimas aceptables para plan de pagos.
+6. RESERVA DE CARTERA INCOBRABLE: Estimación del monto de difícil recuperación.
+7. REPORTE PARA DIRECCIÓN: Situación de cartera y acciones en curso.
+
+Formato para reunión semanal de cobranza.`
+  },
+  {
+    id:'fin_3', dept:'finanzas',
+    tags:['impuestos','fiscal','isr','iva','declaracion','declaración','deducible','deducir','sat','regimen','régimen'],
+    title:'Análisis Fiscal y Optimización de Impuestos',
+    prompt:`Especialista fiscal en empresas constructoras. Para la empresa [NOMBRE], régimen [RÉGIMEN], periodo [PERIODO]:
+
+1. CONCEPTOS DEDUCIBLES: Lista de gastos deducibles específicos para constructoras (materiales, maquinaria, subcontratos, etc.).
+2. ESTIMACIONES PREVENTIVAS: ISR e IVA estimados para el periodo con los ingresos actuales.
+3. DEPRECIACIONES: Activos depreciables, tasas aplicables y beneficio fiscal.
+4. DIFERIMIENTO DE IMPUESTOS: Estrategias legales para optimizar el flujo fiscal.
+5. RIESGOS: Conceptos que suelen ser auditados en constructoras.
+6. DOCUMENTACIÓN: Requisitos de los CFDI para que sean deducibles.
+
+Nota: Verificar con contador certificado antes de aplicar. Orientación preliminar.`
+  },
+  {
+    id:'fin_4', dept:'finanzas',
+    tags:['credito','crédito','financiamiento','prestamo','préstamo','banco','linea de credito','línea de crédito','capital de trabajo','deuda'],
+    title:'Análisis de Opciones de Financiamiento',
+    prompt:`CFO de empresa constructora. Necesidad de financiamiento: [MONTO, PLAZO, DESTINO]:
+
+1. OPCIONES DISPONIBLES: Crédito bancario | Factoraje | Arrendamiento | Crédito de proveedores | Capital privado.
+2. TABLA COMPARATIVA: Opción | Tasa | Plazo | Garantías | Tiempo de gestión | Costo total.
+3. ANÁLISIS COSTO-BENEFICIO: Tasa efectiva anual de cada opción.
+4. IMPACTO EN FLUJO: Cómo afecta el servicio de deuda al flujo mensual de la empresa.
+5. REQUISITOS: Documentación típica que piden bancos/financieras a constructoras.
+6. RECOMENDACIÓN: Mejor opción con justificación según situación financiera actual.
+7. RIESGOS: Riesgos de cada opción y cómo mitigarlos.
+
+Análisis para presentar a consejo o socios.`
+  },
+
+  // ══════════════════════════════════════════════
+  // LEGAL Y CONTRATOS (4 prompts)
+  // ══════════════════════════════════════════════
+  {
+    id:'leg_1', dept:'legal',
+    tags:['contrato','revisar contrato','riesgo','clausula','cláusula','legal','firmar','revisión legal'],
+    title:'Revisión de Contrato con Identificación de Riesgos',
+    prompt:`Abogado contratos de construcción. Contrato: [TEXTO O CLÁUSULAS CLAVE]:
+
+1. RESUMEN: Tipo, partes, objeto, monto y plazo en 5 líneas.
+2. OBLIGACIONES: Tabla — obligación | responsable | fecha | consecuencia.
+3. CLÁUSULAS DE RIESGO: Alto/medio/bajo en: penalizaciones, garantías, rescisión, responsabilidad, jurisdicción.
+4. CLÁUSULAS AUSENTES: Protecciones que deberían incluirse para Grupo Senda.
+5. NEGOCIACIÓN: Top 5 cláusulas a renegociar con propuesta alternativa.
+6. SEMÁFORO: Bajo/Medio/Alto riesgo global.
+7. ACCIONES ANTES DE FIRMAR.
+
+Orientación preliminar — consultar abogado para decisión final.`
+  },
+  {
+    id:'leg_2', dept:'legal',
+    tags:['minuta','acta','reunion','junta','acuerdos','acta de reunion','acta de junta','compromisos','seguimiento de acuerdos'],
+    title:'Minuta de Junta y Seguimiento de Acuerdos',
+    prompt:`Secretario técnico de proyecto. Reunión [TIPO], fecha [FECHA], asistentes [LISTA]:
+
+1. DATOS: Proyecto, tipo de reunión, fecha, lugar, hora inicio/fin, asistentes con cargo.
+2. ORDEN DEL DÍA: Temas cubiertos en orden.
+3. ACUERDOS: Número | Descripción | Responsable | Fecha compromiso | Estado (nuevo/pendiente/cerrado).
+4. PENDIENTES ANTERIORES: Revisión del estatus de compromisos de juntas previas.
+5. TEMAS DIFERIDOS: Lo que no se resolvió y para cuándo.
+6. PRÓXIMA REUNIÓN: Fecha, lugar y temas a tratar.
+7. DISTRIBUCIÓN: Lista de personas que reciben la minuta.
+
+Redacción formal lista para envío a participantes.`
+  },
+  {
+    id:'leg_3', dept:'legal',
+    tags:['subcontrato','subcontratista','contrato de subcontrato','contratista','alcance de trabajo','scope','convenio'],
+    title:'Contrato de Subcontrato de Obra',
+    prompt:`Abogado especialista en construcción. Subcontrato entre [CONTRATISTA GENERAL] y [SUBCONTRATISTA] para [TRABAJO]:
+
+1. ALCANCE: Descripción precisa del trabajo incluido y excluido.
+2. PRECIO Y FORMA DE PAGO: Monto, desglose por estimaciones, retenciones y condiciones de pago.
+3. PROGRAMA: Fechas de inicio, hitos y terminación. Penalizaciones por atraso.
+4. OBLIGACIONES DEL SUBCONTRATISTA: Calidad, seguridad, personal, permisos, seguros.
+5. OBLIGACIONES DEL CONTRATANTE: Frente libre, materiales a suministrar, aprobaciones.
+6. GARANTÍAS: Fianza de cumplimiento, de vicios ocultos, retención de garantía.
+7. CAUSAS DE RESCISIÓN: Para ambas partes.
+8. CLÁUSULAS ESPECIALES: Back-to-back con contrato principal, cesión de derechos, confidencialidad.
+
+Borrador para revisión legal antes de firma.`
+  },
+  {
+    id:'leg_4', dept:'legal',
+    tags:['reclamacion','reclamación','deductiva','deductivas','extras','cambio de alcance','cambio','reclamo','disputa','conflicto contractual'],
+    title:'Gestión de Reclamaciones y Cambios de Alcance',
+    prompt:`Director de proyectos / abogado contractual. Situación: [DESCRIPCIÓN DEL CAMBIO O RECLAMACIÓN]:
+
+1. ANÁLISIS: Si el cambio es compensable según el contrato — base contractual exacta.
+2. CUANTIFICACIÓN: Costo del cambio (materiales, mano de obra, equipos, indirectos, utilidad) y días de impacto al programa.
+3. DOCUMENTACIÓN REQUERIDA: Evidencias necesarias para soportar la reclamación (bitácoras, fotos, comunicados).
+4. CARTA DE RECLAMACIÓN: Texto formal citando cláusulas del contrato.
+5. ESTRATEGIA DE NEGOCIACIÓN: Posición máxima, mínima aceptable y BATNA.
+6. TIEMPOS: Plazos contractuales para notificar y reclamar que no deben vencerse.
+7. RIESGOS: Si no se reclama en tiempo, qué se pierde.
+
+Guía para proteger los derechos contractuales de Grupo Senda.`
   }
+
 ];
+
+
 
 // ─── STATE ───
 let currentDept = 'todos';
@@ -696,48 +1134,6 @@ function autoResize(el) {
   el.style.height = Math.min(el.scrollHeight, 110) + 'px';
 }
 
-// ─── SMART MATCHING v2 ───
-function matchPrompts(userText) {
-  const norm = t => t.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
-  const text = norm(userText);
-  const words = text.split(/\s+/).filter(w => w.length > 2);
-
-  const scored = promptDB.map(p => {
-    const deptBonus = currentDept === 'todos' ? 1 : (p.dept === currentDept ? 2 : 0.1);
-
-    // Exact tag match (highest priority)
-    const exactScore = p.tags.reduce((acc, tag) => {
-      const t = norm(tag);
-      if (text.includes(t)) return acc + (t.includes(' ') ? 4 : 2); // multi-word tags worth more
-      return acc;
-    }, 0);
-
-    // Word-level partial match
-    const wordScore = words.reduce((acc, w) => {
-      if (w.length < 3) return acc;
-      const inTag = p.tags.some(tag => norm(tag).includes(w));
-      const tagInWord = p.tags.some(tag => w.includes(norm(tag)) && norm(tag).length > 3);
-      return acc + (inTag ? 1.5 : 0) + (tagInWord ? 1 : 0);
-    }, 0);
-
-    // Title match bonus
-    const titleScore = norm(p.title).split(' ').filter(w => w.length > 3)
-      .reduce((acc, w) => acc + (text.includes(w) ? 2 : 0), 0);
-
-    const total = (exactScore + wordScore + titleScore) * deptBonus;
-    return {...p, score: total};
-  }).sort((a, b) => b.score - a.score);
-
-  // Always return best match — never leave user without a prompt
-  const positive = scored.filter(p => p.score > 0);
-  if (positive.length === 0) {
-    // Fallback: return top prompts for selected dept
-    const deptFallback = promptDB.filter(p => currentDept === 'todos' || p.dept === currentDept);
-    return (deptFallback.length > 0 ? deptFallback : promptDB).slice(0, 1);
-  }
-  return positive.slice(0, 2);
-}
-
 async function sendMessage() {
   const input = document.getElementById('chatInput');
   const text = input.value.trim();
@@ -752,61 +1148,57 @@ async function sendMessage() {
   const typingId = showTyping();
 
   try {
-    const matched = matchPrompts(text);
+    const deptContext = currentDept === 'todos' ? 'cualquier departamento' : currentDept;
 
-    // Send ALL prompts as context so Claude can pick the best one intelligently
-    const allPromptsContext = promptDB.map(p =>
-      `ID: ${p.id} | Depto: ${p.dept} | Título: "${p.title}" | Tags: ${p.tags.join(', ')}`
-    ).join('\n');
+    const systemPrompt = `Eres el asistente de IA de Grupo Senda, empresa constructora. Tu trabajo es generar el MEJOR PROMPT POSIBLE para que el empleado lo use en Claude for Excel o Claude.ai.
 
-    const systemPrompt = `Eres el asistente de inteligencia artificial de Grupo Senda, empresa constructora líder. Tu misión es ayudar a los empleados a encontrar el prompt perfecto para su tarea.
+INSTRUCCIONES ESTRICTAS:
+1. Lee con atención lo que necesita el empleado.
+2. Escribe una respuesta corta (2-3 líneas máximo) en español confirmando lo que entendiste y diciéndole que aquí está su prompt.
+3. Genera UN PROMPT PODEROSO, específico y completo para su petición exacta. El prompt debe:
+   - Asignar un ROL EXPERTO específico a Claude (ej: "Actúa como director de costos de construcción con 20 años de experiencia...")
+   - Incluir CONTEXTO de empresa constructora
+   - Pedir un OUTPUT ESTRUCTURADO con numeración clara
+   - Usar términos técnicos del sector construcción en México
+   - Incluir PLACEHOLDERS en [CORCHETES] para que el empleado sustituya sus datos reales
+   - Ser lo suficientemente detallado para obtener una respuesta excepcional
+   - Terminar indicando el formato de salida ideal (tabla Excel, reporte ejecutivo, etc.)
 
-BASE DE CONOCIMIENTO COMPLETA (todos los prompts disponibles):
-${allPromptsContext}
+FORMATO DE RESPUESTA OBLIGATORIO:
+[Tu mensaje corto de 2-3 líneas confirmando la petición]
 
-CÓMO RESPONDER:
-1. Saluda brevemente y confirma con tus propias palabras lo que el empleado necesita hacer (1 línea)
-2. Indica el prompt más adecuado mencionando su TÍTULO EXACTO en negritas
-3. Explica en 1-2 líneas por qué ese prompt es ideal para su caso específico
-4. Da 1 tip concreto de cómo personalizar el prompt (qué datos sustituir primero)
+---PROMPT---
+[El prompt completo aquí]
+---FIN---
 
-REGLAS ESTRICTAS:
-- SIEMPRE responde en español, sin excepción
-- Tono cálido y profesional, como un colega experto en construcción
-- NUNCA digas que no puedes ayudar — siempre hay un prompt útil
-- NUNCA generes el prompt completo en tu respuesta (el sistema lo muestra automáticamente)
-- Máximo 3 párrafos cortos
-- Si el empleado menciona un proyecto o datos específicos, úsalos en tu respuesta
-- Si la solicitud es ambigua, elige el prompt más probable para construcción y menciónalo`;
+REGLAS:
+- Siempre en español
+- El prompt debe ser diferente y único para cada petición
+- Nunca uses prompts genéricos — personaliza siempre al contexto específico que describe el empleado
+- Si el empleado da detalles (nombre de proyecto, tipo de obra, etc.) incorpóralos al prompt
+- El prompt debe tener mínimo 150 palabras y máximo 400 palabras`;
 
-    const userMsg = `Empleado de Grupo Senda escribe: "${text}"
+    const userMsg = `Empleado del departamento de ${deptContext} de Grupo Senda escribe: "${text}"
 
-Departamento seleccionado: ${currentDept === 'todos' ? 'Sin filtro (todos)' : currentDept}
-
-Prompts pre-seleccionados por el sistema: ${matched.map(p => `"${p.title}"`).join(', ')}
-
-Analiza la solicitud, confirma tu comprensión, recomienda el mejor prompt por título exacto y da un tip de personalización.`;
+Genera el mejor prompt posible para esta petición específica.`;
 
     const response = await fetch("/api/chat", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         model: "claude-sonnet-4-20250514",
-        max_tokens: 600,
+        max_tokens: 1200,
         system: systemPrompt,
-        messages: [{role: "user", content: userMsg}]
+        messages: [{ role: "user", content: userMsg }]
       })
     });
 
     const data = await response.json();
 
-    // Handle API errors gracefully with detail
     if (data.error) {
       removeTyping(typingId);
       const errMsg = data.error.type === 'authentication_error'
-        ? 'Error de API Key. Verifica que la key sea correcta en el código.'
+        ? 'Error de API Key. Verifica en Vercel → Settings → Environment Variables que ANTHROPIC_API_KEY esté configurada.'
         : data.error.type === 'rate_limit_error'
         ? 'Límite de uso alcanzado. Intenta en unos segundos.'
         : `Error: ${data.error.message}`;
@@ -816,13 +1208,10 @@ Analiza la solicitud, confirma tu comprensión, recomienda el mejor prompt por t
       return;
     }
 
-    const aiText = data.content?.map(c => c.text || '').join('') || 'Lo siento, hubo un problema. Intenta de nuevo.';
-
-    // Smart re-match: if Claude mentions a different prompt title, show that one
-    const finalMatched = rematchByTitle(aiText, matched);
+    const fullText = data.content?.map(c => c.text || '').join('') || 'Lo siento, hubo un problema. Intenta de nuevo.';
 
     removeTyping(typingId);
-    renderAIMsg(aiText, finalMatched);
+    renderAIMsg(fullText);
 
   } catch (err) {
     removeTyping(typingId);
@@ -833,38 +1222,44 @@ Analiza la solicitud, confirma tu comprensión, recomienda el mejor prompt por t
   document.getElementById('sendBtn').disabled = false;
 }
 
-// If Claude's response mentions a prompt title not in matched, swap it in
-function rematchByTitle(aiText, matched) {
-  const norm = t => t.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-  const aiNorm = norm(aiText);
-  for (const p of promptDB) {
-    if (norm(p.title).split(' ').filter(w => w.length > 4).every(w => aiNorm.includes(w))) {
-      if (!matched.find(m => m.id === p.id)) return [p, ...matched].slice(0, 2);
-    }
-  }
-  return matched;
-}
-
-function renderAIMsg(aiText, matched) {
+function renderAIMsg(fullText) {
   const msgs = document.getElementById('chatMessages');
   const div = document.createElement('div');
   div.className = 'msg ai';
 
-  const promptBoxesHTML = matched.length > 0
-    ? matched.map((p, i) => `
-        <div class="prompt-box">
-          <span class="pbox-label">📋 Prompt${matched.length > 1 ? ' #' + (i + 1) : ''}: ${p.title}</span>${escHtml(p.prompt)}<button class="copy-inline" id="cb-${p.id}" onclick="copyP('${p.id}')">Copiar</button>
-        </div>`).join('')
-    : '';
+  // Parse response: split on ---PROMPT--- markers
+  const promptMatch = fullText.match(/---PROMPT---([\s\S]*?)---FIN---/);
+  let msgText = fullText;
+  let promptHTML = '';
+
+  if (promptMatch) {
+    const promptContent = promptMatch[1].trim();
+    msgText = fullText.split('---PROMPT---')[0].trim();
+    const uid = 'gen_' + Date.now();
+    window._generatedPrompts = window._generatedPrompts || {};
+    window._generatedPrompts[uid] = promptContent;
+    promptHTML = `
+      <div class="prompt-box">
+        <span class="pbox-label">✨ Prompt generado para ti</span>${escHtml(promptContent)}<button class="copy-inline" id="cb-${uid}" onclick="copyGenerated('${uid}')">Copiar</button>
+      </div>`;
+  }
 
   div.innerHTML = `
     <span class="msg-sender">Asistente Senda</span>
     <div class="msg-bubble">
-      ${fmtText(aiText)}
-      ${promptBoxesHTML}
+      ${fmtText(msgText)}
+      ${promptHTML}
     </div>`;
   msgs.appendChild(div);
   msgs.scrollTop = msgs.scrollHeight;
+}
+
+function copyGenerated(uid) {
+  const text = window._generatedPrompts?.[uid] || '';
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.getElementById('cb-' + uid);
+    if (btn) { btn.textContent = '✓ Copiado'; btn.classList.add('ok'); setTimeout(() => { btn.textContent = 'Copiar'; btn.classList.remove('ok'); }, 2000); }
+  });
 }
 
 function fmtText(t) {
