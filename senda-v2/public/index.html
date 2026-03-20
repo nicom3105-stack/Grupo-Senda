@@ -206,6 +206,8 @@ nav a:hover { color:var(--navy); }
 }
 .send-btn:hover { background:var(--navy-mid); transform:scale(1.05); }
 .send-btn:disabled { opacity:0.4; cursor:not-allowed; transform:none; }
+.send-btn.has-file { background: #16a34a; box-shadow: 0 0 0 3px rgba(22,163,74,0.25); }
+.send-btn.has-file:hover { background: #15803d; }
 
 .file-upload-btn {
   width:44px; height:44px; flex-shrink:0;
@@ -1155,14 +1157,51 @@ let attachedFiles = []; // {name, type, base64, mimeType, size}
 // ─── FILE HANDLING ───
 function handleFiles(event) {
   const files = Array.from(event.target.files);
+  let loaded = 0;
+  const total = files.length;
+
   files.forEach(file => {
-    if (attachedFiles.length >= 5) { alert('Máximo 5 archivos por mensaje.'); return; }
+    if (attachedFiles.length >= 5) { alert('Máximo 5 archivos por mensaje.'); loaded++; return; }
+
     const reader = new FileReader();
     reader.onload = (e) => {
       const base64 = e.target.result.split(',')[1];
-      attachedFiles.push({ name: file.name, type: getFileType(file), base64, mimeType: file.type, size: file.size });
+      attachedFiles.push({
+        name: file.name,
+        type: getFileType(file),
+        base64,
+        mimeType: file.type || 'application/octet-stream',
+        size: file.size
+      });
+      loaded++;
       renderFilePreviews();
+
+      // Auto-populate placeholder text if input is empty
+      const input = document.getElementById('chatInput');
+      if (!input.value.trim()) {
+        const suggestions = {
+          spreadsheet: 'Analiza este archivo y dame los insights más importantes para Grupo Senda.',
+          pdf: 'Analiza este documento y extrae la información más relevante.',
+          image: 'Analiza esta imagen y describe todo lo que ves.',
+          text: 'Analiza este archivo y dame un resumen con los puntos clave.'
+        };
+        const ftype = getFileType(file);
+        input.value = suggestions[ftype] || 'Analiza este archivo adjunto.';
+        autoResize(input);
+      }
+
+      // If all files loaded, focus input
+      if (loaded === total) {
+        input.focus();
+        input.select();
+      }
     };
+
+    reader.onerror = () => {
+      console.error('Error reading file:', file.name);
+      loaded++;
+    };
+
     reader.readAsDataURL(file);
   });
   event.target.value = '';
@@ -1183,75 +1222,82 @@ function getFileEmoji(type) {
 
 function renderFilePreviews() {
   const bar = document.getElementById('filePreviewBar');
-  bar.innerHTML = attachedFiles.map((f, i) => `
+  if (attachedFiles.length === 0) { bar.innerHTML = ''; return; }
+  bar.innerHTML = `
+    <div style="width:100%;font-size:11px;color:var(--navy);font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:0 2px;margin-bottom:4px;">
+      📎 ${attachedFiles.length} archivo${attachedFiles.length > 1 ? 's' : ''} listo${attachedFiles.length > 1 ? 's' : ''} — presiona ↑ para enviar
+    </div>` +
+    attachedFiles.map((f, i) => `
     <div class="file-chip">
       <span>${getFileEmoji(f.type)}</span>
-      <span title="${f.name}">${f.name.length > 22 ? f.name.substring(0,22)+'...' : f.name}</span>
-      <button class="file-chip-remove" onclick="removeFile(${i})">×</button>
+      <span title="${f.name}">${f.name.length > 24 ? f.name.substring(0,24)+'...' : f.name}</span>
+      <span style="color:var(--mid-gray);font-weight:400;font-size:10px">${Math.round(f.size/1024)}KB</span>
+      <button class="file-chip-remove" onclick="removeFile(${i})" title="Quitar archivo">×</button>
     </div>`).join('');
 }
 
 function removeFile(idx) {
   attachedFiles.splice(idx, 1);
   renderFilePreviews();
+  updateSendBtn();
+}
+
+function updateSendBtn() {
+  const btn = document.getElementById('sendBtn');
+  if (attachedFiles.length > 0) {
+    btn.classList.add('has-file');
+    btn.title = 'Enviar con archivo adjunto';
+  } else {
+    btn.classList.remove('has-file');
+    btn.title = '';
+  }
 }
 
 function buildMessageContent(text, files) {
-  // Always return array format so API handles it consistently
   const content = [];
 
-  files.forEach(f => {
+  files.forEach(function(f) {
     if (f.type === 'image') {
-      // Images: send as base64 vision block
-      const mimeType = f.mimeType && f.mimeType.startsWith('image/') ? f.mimeType : 'image/jpeg';
-      content.push({
-        type: 'image',
-        source: { type: 'base64', media_type: mimeType, data: f.base64 }
-      });
-      content.push({ type: 'text', text: `[Imagen adjunta: ${f.name}]` });
+      var mimeType = (f.mimeType && f.mimeType.startsWith('image/')) ? f.mimeType : 'image/jpeg';
+      content.push({ type: 'image', source: { type: 'base64', media_type: mimeType, data: f.base64 }});
+      content.push({ type: 'text', text: '[Imagen adjunta: ' + f.name + ']' });
 
     } else if (f.type === 'pdf') {
-      // PDFs: send as document block (native PDF reading)
-      content.push({
-        type: 'document',
-        source: { type: 'base64', media_type: 'application/pdf', data: f.base64 }
-      });
-      content.push({ type: 'text', text: `[PDF adjunto: ${f.name}. Lee y analiza su contenido completo.]` });
+      content.push({ type: 'document', source: { type: 'base64', media_type: 'application/pdf', data: f.base64 }});
+      content.push({ type: 'text', text: '[PDF adjunto: ' + f.name + '. Lee y analiza su contenido completo.]' });
 
     } else if (f.type === 'spreadsheet') {
-      // Excel/CSV: try to decode as text (CSV works, xlsx is binary but we try)
       try {
-        const raw = atob(f.base64);
-        // Check if it looks like text (CSV)
-        const isText = /^[	
-
- -~ -ÿ]{10,}/.test(raw);
+        var raw = atob(f.base64);
+        var isText = true;
+        for (var i = 0; i < Math.min(raw.length, 200); i++) {
+          var code = raw.charCodeAt(i);
+          if (code < 9 || (code > 13 && code < 32)) { isText = false; break; }
+        }
         if (isText) {
-          const preview = raw.substring(0, 12000);
-          content.push({ type: 'text', text: `[ARCHIVO: ${f.name}]\n\nCONTENIDO DEL ARCHIVO:\n${preview}${raw.length > 12000 ? '\n...(contenido truncado, archivo grande)' : ''}` });
+          var preview = raw.substring(0, 12000);
+          var truncNote = raw.length > 12000 ? ' ...(truncado)' : '';
+          content.push({ type: 'text', text: '[ARCHIVO: ' + f.name + ']\n\nCONTENIDO:\n' + preview + truncNote });
         } else {
-          // Binary Excel: send structural hint
-          content.push({ type: 'text', text: `[ARCHIVO EXCEL: ${f.name}]\nEste es un archivo Excel binario (.xlsx). Basándote en el nombre del archivo y el contexto de la conversación, ayuda al usuario a analizar este tipo de documento. Si el usuario necesita análisis de datos específicos, sugiere que exporte el Excel a CSV para mejor procesamiento.` });
+          content.push({ type: 'text', text: '[ARCHIVO EXCEL: ' + f.name + '] - Archivo Excel binario. Analiza basandote en el nombre y contexto. Para datos especificos, el usuario puede exportar a CSV.' });
         }
       } catch(e) {
-        content.push({ type: 'text', text: `[ARCHIVO: ${f.name}] - Error al leer el archivo. Tamaño: ${Math.round(f.size/1024)}KB` });
+        content.push({ type: 'text', text: '[ARCHIVO: ' + f.name + '] - ' + Math.round(f.size/1024) + 'KB adjunto.' });
       }
 
     } else {
-      // Text/XML/other: decode as text
       try {
-        const decoded = atob(f.base64);
-        const preview = decoded.substring(0, 12000);
-        content.push({ type: 'text', text: `[ARCHIVO: ${f.name}]\n\nCONTENIDO:\n${preview}${decoded.length > 12000 ? '\n...(truncado)' : ''}` });
+        var raw2 = atob(f.base64);
+        var preview2 = raw2.substring(0, 12000);
+        content.push({ type: 'text', text: '[ARCHIVO: ' + f.name + ']\n\nCONTENIDO:\n' + preview2 });
       } catch(e) {
-        content.push({ type: 'text', text: `[ARCHIVO: ${f.name}] adjunto para análisis.` });
+        content.push({ type: 'text', text: '[ARCHIVO: ' + f.name + '] adjunto para analisis.' });
       }
     }
   });
 
-  // User's message goes last
   content.push({ type: 'text', text: text || 'Analiza el archivo adjunto en profundidad y dame todos los insights relevantes para Grupo Senda.' });
-  return content;
+  return content.length === 1 ? content[0].text : content;
 }
 
 function selectDept(el) {
@@ -1293,6 +1339,7 @@ async function sendMessage() {
   input.style.height = 'auto';
   attachedFiles = [];
   renderFilePreviews();
+  updateSendBtn();
   isLoading = true;
   document.getElementById('sendBtn').disabled = true;
 
