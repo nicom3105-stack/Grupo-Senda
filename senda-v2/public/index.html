@@ -1196,29 +1196,61 @@ function removeFile(idx) {
   renderFilePreviews();
 }
 
-function buildMessageContent(text) {
-  if (attachedFiles.length === 0) return text;
-
+function buildMessageContent(text, files) {
+  // Always return array format so API handles it consistently
   const content = [];
-  
-  attachedFiles.forEach(f => {
+
+  files.forEach(f => {
     if (f.type === 'image') {
-      content.push({ type: 'image', source: { type: 'base64', media_type: f.mimeType, data: f.base64 }});
+      // Images: send as base64 vision block
+      const mimeType = f.mimeType && f.mimeType.startsWith('image/') ? f.mimeType : 'image/jpeg';
+      content.push({
+        type: 'image',
+        source: { type: 'base64', media_type: mimeType, data: f.base64 }
+      });
+      content.push({ type: 'text', text: `[Imagen adjunta: ${f.name}]` });
+
     } else if (f.type === 'pdf') {
-      content.push({ type: 'document', source: { type: 'base64', media_type: 'application/pdf', data: f.base64 }});
+      // PDFs: send as document block (native PDF reading)
+      content.push({
+        type: 'document',
+        source: { type: 'base64', media_type: 'application/pdf', data: f.base64 }
+      });
+      content.push({ type: 'text', text: `[PDF adjunto: ${f.name}. Lee y analiza su contenido completo.]` });
+
+    } else if (f.type === 'spreadsheet') {
+      // Excel/CSV: try to decode as text (CSV works, xlsx is binary but we try)
+      try {
+        const raw = atob(f.base64);
+        // Check if it looks like text (CSV)
+        const isText = /^[	
+
+ -~ -ÿ]{10,}/.test(raw);
+        if (isText) {
+          const preview = raw.substring(0, 12000);
+          content.push({ type: 'text', text: `[ARCHIVO: ${f.name}]\n\nCONTENIDO DEL ARCHIVO:\n${preview}${raw.length > 12000 ? '\n...(contenido truncado, archivo grande)' : ''}` });
+        } else {
+          // Binary Excel: send structural hint
+          content.push({ type: 'text', text: `[ARCHIVO EXCEL: ${f.name}]\nEste es un archivo Excel binario (.xlsx). Basándote en el nombre del archivo y el contexto de la conversación, ayuda al usuario a analizar este tipo de documento. Si el usuario necesita análisis de datos específicos, sugiere que exporte el Excel a CSV para mejor procesamiento.` });
+        }
+      } catch(e) {
+        content.push({ type: 'text', text: `[ARCHIVO: ${f.name}] - Error al leer el archivo. Tamaño: ${Math.round(f.size/1024)}KB` });
+      }
+
     } else {
-      // For Excel/CSV/text: decode and send as text with context
+      // Text/XML/other: decode as text
       try {
         const decoded = atob(f.base64);
-        const fileContext = `[ARCHIVO ADJUNTO: ${f.name}]\nContenido:\n${decoded.substring(0, 8000)}${decoded.length > 8000 ? '\n...(archivo truncado)' : ''}`;
-        content.push({ type: 'text', text: fileContext });
+        const preview = decoded.substring(0, 12000);
+        content.push({ type: 'text', text: `[ARCHIVO: ${f.name}]\n\nCONTENIDO:\n${preview}${decoded.length > 12000 ? '\n...(truncado)' : ''}` });
       } catch(e) {
-        content.push({ type: 'text', text: `[ARCHIVO ADJUNTO: ${f.name} - archivo binario, analiza según el nombre y contexto]` });
+        content.push({ type: 'text', text: `[ARCHIVO: ${f.name}] adjunto para análisis.` });
       }
     }
   });
-  
-  content.push({ type: 'text', text });
+
+  // User's message goes last
+  content.push({ type: 'text', text: text || 'Analiza el archivo adjunto en profundidad y dame todos los insights relevantes para Grupo Senda.' });
   return content;
 }
 
@@ -1280,11 +1312,14 @@ TU PERSONALIDAD:
 
 CÓMO RESPONDER:
 
-1. SI ADJUNTAN UN ARCHIVO (Excel, PDF, imagen, cronograma):
-   - Analiza el archivo INMEDIATAMENTE y en profundidad
-   - Extrae todos los datos relevantes: números, fechas, partidas, actividades, costos, etc.
-   - Presenta el análisis estructurado con hallazgos, alertas y recomendaciones
-   - Al final, genera UN PROMPT PODEROSO para profundizar el análisis en detalle
+1. SI RECIBES UN ARCHIVO ADJUNTO (verás su contenido en el mensaje):
+   - El archivo YA ESTÁ ADJUNTO — NUNCA digas "necesito que subas el archivo" ni "para proceder adjunta el archivo"
+   - Analiza INMEDIATAMENTE y en profundidad todo lo que ves en el archivo
+   - Para PDFs: lee y extrae toda la información relevante
+   - Para Excel/CSV: analiza los datos, tablas, cifras, fechas y partidas
+   - Para imágenes: describe y analiza visualmente todo el contenido
+   - Presenta análisis estructurado: hallazgos clave, alertas, inconsistencias, oportunidades
+   - Al final genera UN PROMPT PODEROSO para profundizar más
    - USA el formato ---PROMPT--- / ---FIN--- para el prompt
 
 2. SI PIDEN UN PROMPT O TAREA ESPECÍFICA:
@@ -1322,7 +1357,7 @@ REGLAS ABSOLUTAS:
 - Nunca digas que no puedes ayudar
 - Sé específico, no genérico — cada respuesta debe sentirse hecha a medida`;
 
-    const messageContent = buildMessageContent(sentText);
+    const messageContent = buildMessageContent(sentText, sentFiles);
 
     const response = await fetch("/api/chat", {
       method: "POST",
