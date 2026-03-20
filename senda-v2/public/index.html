@@ -207,6 +207,39 @@ nav a:hover { color:var(--navy); }
 .send-btn:hover { background:var(--navy-mid); transform:scale(1.05); }
 .send-btn:disabled { opacity:0.4; cursor:not-allowed; transform:none; }
 
+.file-upload-btn {
+  width:44px; height:44px; flex-shrink:0;
+  background:var(--off-white); color:var(--text-soft);
+  border:1.5px solid var(--light-gray); border-radius:11px;
+  font-size:18px; cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+  transition:all 0.2s;
+}
+.file-upload-btn:hover { background:var(--navy-light); border-color:var(--navy); color:var(--navy); }
+.file-preview-bar {
+  padding:8px 18px 0;
+  display:flex; flex-wrap:wrap; gap:8px;
+}
+.file-chip {
+  display:flex; align-items:center; gap:6px;
+  background:var(--navy-light); border:1.5px solid var(--navy);
+  border-radius:8px; padding:5px 10px;
+  font-size:12px; font-weight:600; color:var(--navy);
+  max-width:200px;
+}
+.file-chip span { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.file-chip-remove {
+  background:none; border:none; color:var(--navy);
+  cursor:pointer; font-size:14px; line-height:1;
+  padding:0; flex-shrink:0;
+}
+.file-chip-remove:hover { color:#e11d48; }
+.msg-file-badge {
+  display:inline-flex; align-items:center; gap:5px;
+  background:rgba(255,255,255,0.15); border-radius:6px;
+  padding:3px 8px; font-size:11px; margin-bottom:6px;
+}
+
 .sidebar { display:flex; flex-direction:column; gap:12px; }
 .sidebar-title { font-size:11px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--navy); padding:0 4px; }
 .quick-card {
@@ -324,9 +357,12 @@ footer p { font-size:12px; color:rgba(255,255,255,0.3); }
           </div>
         </div>
       </div>
+      <div id="filePreviewBar" class="file-preview-bar"></div>
       <div class="chat-input-area">
+        <input type="file" id="fileInput" multiple accept=".xlsx,.xls,.csv,.pdf,.png,.jpg,.jpeg,.txt,.mpp,.xml" style="display:none" onchange="handleFiles(event)"/>
+        <button class="file-upload-btn" onclick="document.getElementById('fileInput').click()" title="Adjuntar archivo">📎</button>
         <textarea class="chat-input" id="chatInput" rows="1"
-          placeholder="Ej: 'Analízame este excel para retroalimentación al departamento de costos'..."
+          placeholder="Escribe tu pregunta o adjunta un archivo Excel, PDF, cronograma..."
           onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
         <button class="send-btn" id="sendBtn" onclick="sendMessage()">↑</button>
       </div>
@@ -1114,6 +1150,77 @@ Guía para proteger los derechos contractuales de Grupo Senda.`
 // ─── STATE ───
 let currentDept = 'todos';
 let isLoading = false;
+let attachedFiles = []; // {name, type, base64, mimeType, size}
+
+// ─── FILE HANDLING ───
+function handleFiles(event) {
+  const files = Array.from(event.target.files);
+  files.forEach(file => {
+    if (attachedFiles.length >= 5) { alert('Máximo 5 archivos por mensaje.'); return; }
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const base64 = e.target.result.split(',')[1];
+      attachedFiles.push({ name: file.name, type: getFileType(file), base64, mimeType: file.type, size: file.size });
+      renderFilePreviews();
+    };
+    reader.readAsDataURL(file);
+  });
+  event.target.value = '';
+}
+
+function getFileType(file) {
+  const ext = file.name.split('.').pop().toLowerCase();
+  if (['xlsx','xls','csv'].includes(ext)) return 'spreadsheet';
+  if (['pdf'].includes(ext)) return 'pdf';
+  if (['png','jpg','jpeg','gif','webp'].includes(ext)) return 'image';
+  if (['txt','xml','mpp'].includes(ext)) return 'text';
+  return 'document';
+}
+
+function getFileEmoji(type) {
+  return {spreadsheet:'📊', pdf:'📄', image:'🖼️', text:'📝', document:'📎'}[type] || '📎';
+}
+
+function renderFilePreviews() {
+  const bar = document.getElementById('filePreviewBar');
+  bar.innerHTML = attachedFiles.map((f, i) => `
+    <div class="file-chip">
+      <span>${getFileEmoji(f.type)}</span>
+      <span title="${f.name}">${f.name.length > 22 ? f.name.substring(0,22)+'...' : f.name}</span>
+      <button class="file-chip-remove" onclick="removeFile(${i})">×</button>
+    </div>`).join('');
+}
+
+function removeFile(idx) {
+  attachedFiles.splice(idx, 1);
+  renderFilePreviews();
+}
+
+function buildMessageContent(text) {
+  if (attachedFiles.length === 0) return text;
+
+  const content = [];
+  
+  attachedFiles.forEach(f => {
+    if (f.type === 'image') {
+      content.push({ type: 'image', source: { type: 'base64', media_type: f.mimeType, data: f.base64 }});
+    } else if (f.type === 'pdf') {
+      content.push({ type: 'document', source: { type: 'base64', media_type: 'application/pdf', data: f.base64 }});
+    } else {
+      // For Excel/CSV/text: decode and send as text with context
+      try {
+        const decoded = atob(f.base64);
+        const fileContext = `[ARCHIVO ADJUNTO: ${f.name}]\nContenido:\n${decoded.substring(0, 8000)}${decoded.length > 8000 ? '\n...(archivo truncado)' : ''}`;
+        content.push({ type: 'text', text: fileContext });
+      } catch(e) {
+        content.push({ type: 'text', text: `[ARCHIVO ADJUNTO: ${f.name} - archivo binario, analiza según el nombre y contexto]` });
+      }
+    }
+  });
+  
+  content.push({ type: 'text', text });
+  return content;
+}
 
 function selectDept(el) {
   document.querySelectorAll('.dept-pill').forEach(p => p.classList.remove('active'));
@@ -1140,11 +1247,20 @@ function autoResize(el) {
 async function sendMessage() {
   const input = document.getElementById('chatInput');
   const text = input.value.trim();
-  if (!text || isLoading) return;
+  if ((!text && attachedFiles.length === 0) || isLoading) return;
 
-  appendMsg('user', text);
+  // Show user message with file badges
+  const fileNames = attachedFiles.map(f => `${getFileEmoji(f.type)} ${f.name}`).join(', ');
+  const displayText = text + (fileNames ? `<br/><span class="msg-file-badge">📎 ${fileNames}</span>` : '');
+  appendMsgHTML('user', displayText);
+
+  const sentText = text || 'Analiza el archivo adjunto y dime qué insights relevantes encuentras para Grupo Senda.';
+  const sentFiles = [...attachedFiles];
+  
   input.value = '';
   input.style.height = 'auto';
+  attachedFiles = [];
+  renderFilePreviews();
   isLoading = true;
   document.getElementById('sendBtn').disabled = true;
 
@@ -1152,66 +1268,70 @@ async function sendMessage() {
 
   try {
     const deptContext = currentDept === 'todos' ? 'cualquier departamento' : currentDept;
+    const hasFiles = sentFiles.length > 0;
+    const fileTypes = sentFiles.map(f => f.name).join(', ');
 
-    const systemPrompt = `Eres el asistente de inteligencia artificial de Grupo Senda, empresa constructora panameña. Eres experto en construcción en Panamá: conoces el mercado local, las normas del MIVIOT, el Reglamento Nacional de Construcción de Panamá, proveedores panameños, costos en balboas/dólares, y la realidad del sector construcción en el país.
+    const systemPrompt = `Eres el asistente de inteligencia artificial de Grupo Senda, empresa constructora panameña con proyectos de alto perfil. Eres experto en construcción en Panamá: conoces MIVIOT, MICI, Reglamento Nacional de Construcción, normas COPANIT, precios en dólares, proveedores locales y la realidad del sector.
 
 TU PERSONALIDAD:
-- Eres como un colega experto — cercano, directo y profesional
-- Respondes siempre en español (con términos panameños cuando aplica)
-- Eres útil para responder preguntas, pero tu ESPECIALIDAD es generar prompts poderosos
+- Colega experto — directo, preciso y profesional
+- Siempre en español panameño
+- Especialidad: analizar archivos Y generar los mejores prompts del mundo
 
-CÓMO MANEJAR CADA TIPO DE MENSAJE:
+CÓMO RESPONDER:
 
-1. SI EL EMPLEADO PIDE UN PROMPT O TAREA ESPECÍFICA:
-   - Responde en 2-3 líneas confirmando lo que entendiste
-   - Genera el mejor prompt posible (ver formato abajo)
+1. SI ADJUNTAN UN ARCHIVO (Excel, PDF, imagen, cronograma):
+   - Analiza el archivo INMEDIATAMENTE y en profundidad
+   - Extrae todos los datos relevantes: números, fechas, partidas, actividades, costos, etc.
+   - Presenta el análisis estructurado con hallazgos, alertas y recomendaciones
+   - Al final, genera UN PROMPT PODEROSO para profundizar el análisis en detalle
+   - USA el formato ---PROMPT--- / ---FIN--- para el prompt
+
+2. SI PIDEN UN PROMPT O TAREA ESPECÍFICA:
+   - 2-3 líneas confirmando lo que entendiste
+   - Genera el mejor prompt posible
    - USA el formato ---PROMPT--- / ---FIN---
 
-2. SI EL EMPLEADO HACE UNA PREGUNTA GENERAL DE CONSTRUCCIÓN:
-   - Responde la pregunta de forma concisa y útil (máximo 4-5 líneas)
-   - Al final, ofrece generar un prompt relacionado. Ej: "¿Quieres que te genere un prompt para analizar esto en detalle?"
-   - NO uses el formato ---PROMPT--- a menos que el empleado confirme que quiere el prompt
+3. SI HACEN UNA PREGUNTA GENERAL:
+   - Responde conciso y útil (máximo 5 líneas)
+   - Ofrece generar un prompt relacionado al final
 
-3. SI EL EMPLEADO SALUDA O DA CONTEXTO:
-   - Saluda brevemente y pregunta en qué le puedes ayudar hoy
-   - NO uses el formato ---PROMPT---
+4. SALUDO O CONTEXTO:
+   - Saluda brevemente, pregunta en qué ayudar
+   - Sin formato ---PROMPT---
 
-CUANDO GENERES UN PROMPT, debe:
-- Asignar un ROL EXPERTO específico (ej: "Actúa como director de costos de construcción con 20 años de experiencia en Panamá...")
-- Mencionar el contexto de Grupo Senda y Panamá cuando sea relevante
-- Usar normativa panameña: MIVIOT, MICI, Ley 41, normas COPANIT, precios en dólares
-- Pedir OUTPUT ESTRUCTURADO con numeración clara
-- Incluir PLACEHOLDERS en [CORCHETES] para datos reales
-- Tener entre 150-400 palabras
-- Terminar indicando el formato ideal (tabla, reporte ejecutivo, etc.)
+CUANDO GENERES UN PROMPT debe:
+- Rol experto específico con 20+ años en Panamá
+- Contexto de Grupo Senda y normativa panameña
+- Output estructurado numerado
+- Placeholders en [CORCHETES]
+- 150-400 palabras
+- Formato de salida ideal especificado
 
-FORMATO CUANDO GENERES PROMPT:
-[Mensaje corto de 2-3 líneas]
+FORMATO RESPUESTA CON PROMPT:
+[Análisis o mensaje corto]
 
 ---PROMPT---
-[El prompt completo aquí]
+[Prompt completo aquí]
 ---FIN---
 
 REGLAS ABSOLUTAS:
 - Siempre en español
-- NUNCA menciones que eres Claude, ni Claude.ai, ni Anthropic, ni ningún modelo de IA específico
-- Si alguien pregunta qué IA eres o quién te creó, di que eres el Asistente IA de Grupo Senda, desarrollado internamente para la empresa
+- NUNCA menciones que eres una IA específica, ni tu modelo, ni quien te creó — eres el Asistente IA de Grupo Senda
+- Si preguntan qué IA eres: "Soy el asistente de IA de Grupo Senda, desarrollado para apoyar las operaciones de la empresa"
 - Nunca digas que no puedes ayudar
-- Si no entiendes bien la petición, haz UNA pregunta de clarificación antes de generar el prompt
-- Cada prompt debe ser único y personalizado — nunca genérico`;
+- Sé específico, no genérico — cada respuesta debe sentirse hecha a medida`;
 
-    const userMsg = `Empleado del departamento de ${deptContext} de Grupo Senda (empresa constructora en Panamá) escribe: "${text}"
-
-Analiza si es una pregunta, un saludo, o una petición de prompt/tarea y responde según tus instrucciones.`;
+    const messageContent = buildMessageContent(sentText);
 
     const response = await fetch("/api/chat", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        model: "claude-sonnet-4-20250514",
-        max_tokens: 1200,
+        model: "claude-opus-4-5",
+        max_tokens: 2000,
         system: systemPrompt,
-        messages: [{ role: "user", content: userMsg }]
+        messages: [{ role: "user", content: messageContent }]
       })
     });
 
@@ -1231,7 +1351,6 @@ Analiza si es una pregunta, un saludo, o una petición de prompt/tarea y respond
     }
 
     const fullText = data.content?.map(c => c.text || '').join('') || 'Lo siento, hubo un problema. Intenta de nuevo.';
-
     removeTyping(typingId);
     renderAIMsg(fullText);
 
@@ -1306,6 +1425,15 @@ function appendMsg(role, text) {
   const div = document.createElement('div');
   div.className = `msg ${role}`;
   div.innerHTML = `<span class="msg-sender">${role === 'user' ? 'Tú' : 'Asistente Senda'}</span><div class="msg-bubble">${fmtText(text)}</div>`;
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function appendMsgHTML(role, html) {
+  const msgs = document.getElementById('chatMessages');
+  const div = document.createElement('div');
+  div.className = `msg ${role}`;
+  div.innerHTML = `<span class="msg-sender">${role === 'user' ? 'Tú' : 'Asistente Senda'}</span><div class="msg-bubble">${html}</div>`;
   msgs.appendChild(div);
   msgs.scrollTop = msgs.scrollHeight;
 }
