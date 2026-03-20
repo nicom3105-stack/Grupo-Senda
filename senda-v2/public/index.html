@@ -54,11 +54,13 @@ nav a:hover { color:var(--navy); }
   background:var(--white); border:1.5px solid var(--light-gray);
   border-radius:12px; padding:8px; min-width:190px;
   box-shadow:0 8px 32px rgba(10,36,114,0.15);
-  z-index:500;
+  z-index:9999;
+}
+.nav-dropdown-menu.open {
+  display:block !important;
   animation:dropIn 0.18s ease;
 }
 @keyframes dropIn { from{opacity:0;transform:translateY(-6px)} to{opacity:1;transform:translateY(0)} }
-.nav-dropdown-menu.open { display:block; }
 .nav-dropdown-item {
   display:flex; align-items:center; gap:10px;
   padding:9px 12px; border-radius:8px;
@@ -317,7 +319,7 @@ footer p { font-size:12px; color:rgba(255,255,255,0.3); }
   .logo-divider { display:none; }
   .logo-tagline { display:none; }
   .logo-svg-wrap img { height:30px !important; }
-  nav a:not(.nav-dropdown .nav-dropdown-btn) { display:none; }
+  nav > a { display:none; }  /* hide top-level nav links, keep dropdown items */
   .nav-dropdown-btn { font-size:12px; }
   .nav-dropdown-menu { right:-8px; min-width:170px; }
 
