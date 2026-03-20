@@ -458,9 +458,9 @@ footer p { font-size:12px; color:rgba(255,255,255,0.3); }
 </section>
 
 <div id="asistente" class="main-container">
-  <div class="section-label">Asistente IA</div>
-  <div class="section-heading">¿En qué te puedo ayudar hoy?</div>
-  <p class="section-sub">Escribe con tus propias palabras lo que necesitas. Sin tecnicismos — el asistente entiende el contexto de construcción.</p>
+  <div class="section-label">Tu Asistente</div>
+  <div class="section-heading">¿En qué te ayudo hoy?</div>
+  <p class="section-sub">Escríbeme lo que necesitas, así como le hablarías a un compañero de trabajo. Sin complicaciones.</p>
 
   <div class="dept-row" id="deptRow">
     <div class="dept-pill active" data-dept="todos" onclick="selectDept(this)"><span>🏢</span> Todos</div>
@@ -480,14 +480,14 @@ footer p { font-size:12px; color:rgba(255,255,255,0.3); }
         <div class="msg ai">
           <span class="msg-sender">Asistente Senda</span>
           <div class="msg-bubble">
-            ¡Hola! Soy el asistente de IA de <strong>Grupo Senda Panamá</strong>. 👋<br/><br/>
-            Puedo ayudarte de dos formas:<br/>
-            • <strong>Responder preguntas</strong> sobre construcción, costos, procesos o normativa panameña<br/>
-            • <strong>Generar el mejor prompt posible</strong> para que lo uses en tu asistente de IA<br/><br/>
-            Solo dime qué necesitas — en tus propias palabras. Por ejemplo:<br/>
-            <em>"Analízame este presupuesto para retroalimentación al departamento de costos"</em><br/>
-            <em>"¿Cuáles son los requisitos del MIVIOT para un proyecto residencial?"</em>
-          </div>
+            ¡Hola! Soy el asistente de <strong>Grupo Senda</strong>. 👋<br/><br/>
+            Puedo ayudarte con lo que necesites:<br/>
+            • Responder preguntas de construcción y costos en Panamá<br/>
+            • Revisar y analizar tus archivos (Excel, PDF, planos, cronogramas)<br/>
+            • Crear prompts listos para usar<br/><br/>
+            Cuéntame qué necesitas, así de simple. Por ejemplo:<br/>
+            <em>"Revísame este presupuesto y dime cómo vamos"</em><br/>
+            <em>"¿Qué pide el MIVIOT para sacar un permiso de construcción?"</em></div>
         </div>
       </div>
       <div id="filePreviewBar" class="file-preview-bar"></div>
@@ -495,7 +495,7 @@ footer p { font-size:12px; color:rgba(255,255,255,0.3); }
         <input type="file" id="fileInput" multiple accept=".xlsx,.xls,.csv,.pdf,.png,.jpg,.jpeg,.txt,.mpp,.xml" style="display:none" onchange="handleFiles(event)"/>
         <button class="file-upload-btn" onclick="document.getElementById('fileInput').click()" title="Adjuntar archivo">📎</button>
         <textarea class="chat-input" id="chatInput" rows="1"
-          placeholder="Escribe tu pregunta o adjunta un archivo Excel, PDF, cronograma..."
+          placeholder="Escríbeme lo que necesitas o adjunta un archivo..."
           onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
         <button class="send-btn" id="sendBtn" onclick="sendMessage()">↑</button>
       </div>
@@ -533,31 +533,31 @@ footer p { font-size:12px; color:rgba(255,255,255,0.3); }
 
 <div class="examples-strip">
   <div class="examples-inner">
-    <h3>Frases que puedes usar</h3>
+    <h3>Algunos ejemplos de lo que puedes preguntarme</h3>
     <div class="examples-grid">
       <div class="example-chip" onclick="fillAndSend('Analízame este presupuesto de obra y dame retroalimentación para el departamento de costos')">
-        <strong>💰 Presupuesto</strong>"Analízame este presupuesto y dame retroalimentación para costos"
+        <strong>💰 Presupuesto</strong>"Revísame este presupuesto y dime cómo vamos"
       </div>
       <div class="example-chip" onclick="fillAndSend('¿Cuáles son los requisitos del MIVIOT para tramitar una licencia de construcción en Panamá?')">
-        <strong>🏗️ Pregunta</strong>"¿Cuáles son los requisitos del MIVIOT para una licencia de construcción?"
+        <strong>🏗️ Pregunta</strong>"¿Qué necesito para sacar un permiso de construcción en Panamá?"
       </div>
       <div class="example-chip" onclick="fillAndSend('Necesito comparar cotizaciones de varios proveedores para materiales de construcción')">
-        <strong>🚚 Compras</strong>"Necesito comparar cotizaciones de proveedores de materiales"
+        <strong>🚚 Compras</strong>"Compárame estas cotizaciones y dime cuál me conviene"
       </div>
       <div class="example-chip" onclick="fillAndSend('¿Cuánto cuesta aproximadamente construir por metro cuadrado en Panamá?')">
-        <strong>💡 Pregunta</strong>"¿Cuánto cuesta construir por metro cuadrado en Panamá?"
+        <strong>💡 Pregunta</strong>"¿Cuánto sale construir por metro cuadrado en Panamá?"
       </div>
       <div class="example-chip" onclick="fillAndSend('Quiero proyectar el flujo de caja de mi proyecto de construcción para los próximos 6 meses')">
-        <strong>📊 Finanzas</strong>"Quiero proyectar el flujo de caja de mi proyecto"
+        <strong>📊 Finanzas</strong>"Ayúdame a ver cómo va a quedar el dinero mes a mes en mi proyecto"
       </div>
       <div class="example-chip" onclick="fillAndSend('Necesito hacer el reporte semanal de avance de obra para presentar al cliente')">
-        <strong>🦺 Supervisión</strong>"Necesito el reporte semanal de avance para el cliente"
+        <strong>🦺 Supervisión</strong>"Arma el reporte de avance de esta semana para mandarle al cliente"
       </div>
       <div class="example-chip" onclick="fillAndSend('¿Qué normas COPANIT aplican para instalaciones eléctricas en edificios en Panamá?')">
-        <strong>⚡ Pregunta</strong>"¿Qué normas COPANIT aplican para instalaciones eléctricas?"
+        <strong>⚡ Pregunta</strong>"¿Qué normas aplican para las instalaciones eléctricas en Panamá?"
       </div>
       <div class="example-chip" onclick="fillAndSend('Quiero revisar un contrato de subcontrato para identificar riesgos y cláusulas problemáticas')">
-        <strong>⚖️ Legal</strong>"Revisar contrato de subcontrato para identificar riesgos"
+        <strong>⚖️ Legal</strong>"Revísame este contrato y dime si hay algo que me pueda perjudicar"
       </div>
     </div>
   </div>
@@ -1495,59 +1495,57 @@ async function sendMessage() {
     const hasFiles = sentFiles.length > 0;
     const fileTypes = sentFiles.map(f => f.name).join(', ');
 
-    const systemPrompt = `Eres el asistente de inteligencia artificial de Grupo Senda, empresa constructora panameña con proyectos de alto perfil. Eres experto en construcción en Panamá: conoces MIVIOT, MICI, Reglamento Nacional de Construcción, normas COPANIT, precios en dólares, proveedores locales y la realidad del sector.
+    const systemPrompt = `Eres el asistente de Grupo Senda, empresa constructora en Panamá. Ayudas a todos los empleados — desde el gerente hasta el residente de obra.
 
-TU PERSONALIDAD:
-- Colega experto — directo, preciso y profesional
-- Siempre en español panameño
-- Especialidad: analizar archivos Y generar los mejores prompts del mundo
+TIENES DOS MODOS DE COMUNICACIÓN Y DEBES SABER CUÁNDO USAR CADA UNO:
 
-CÓMO RESPONDER:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+MODO 1 — CUANDO HABLAS CON EL EMPLEADO
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Usa lenguaje simple, directo y amable. Como un compañero de trabajo de confianza.
+- Palabras sencillas, frases cortas
+- Sin jerga técnica innecesaria
+- Si algo es complicado, ponlo con un ejemplo de Panamá
+- Máximo 4-5 líneas para respuestas normales
 
-1. SI RECIBES UN ARCHIVO ADJUNTO:
-   - El archivo YA ESTÁ ADJUNTO — NUNCA digas "necesito que subas el archivo"
-   - Analiza INMEDIATAMENTE y en profundidad todo lo que ves
-   - PDFs: lee y extrae toda la información relevante
-   - Excel/CSV: analiza datos, tablas, cifras, fechas, partidas
-   - Imágenes: describe y analiza visualmente todo el contenido
-   - Presenta análisis estructurado: hallazgos clave, alertas, inconsistencias, oportunidades
-   - NO generes prompt a menos que el usuario lo pida explícitamente
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+MODO 2 — CUANDO GENERAS UN PROMPT (solo si te lo piden)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+El prompt que generes NO es para el empleado — es para que una IA lo ejecute. Por eso debe ser:
+- TÉCNICO y preciso: usa terminología profesional de construcción
+- COMPLETO: que la IA tenga todo el contexto necesario para dar una respuesta excelente
+- ESTRUCTURADO: con rol experto asignado, contexto, instrucciones numeradas y formato de salida
+- ESPECÍFICO para Panamá: menciona normativa (MIVIOT, MICI, COPANIT, Ley 41), precios en dólares, proveedores locales cuando aplique
+- Con PLACEHOLDERS en [CORCHETES MAYÚSCULAS] para que el empleado sustituya sus datos reales
+- Entre 200-500 palabras — suficientemente detallado para obtener una respuesta de primer nivel
+- Que empiece con: "Actúa como [ROL EXPERTO con X años de experiencia en construcción en Panamá]..."
 
-2. SI PIDEN EXPLÍCITAMENTE UN PROMPT (dicen "dame un prompt", "genera un prompt", "hazme un prompt"):
-   - 2-3 líneas confirmando lo que entendiste
-   - Genera el mejor prompt posible
-   - USA el formato ---PROMPT--- / ---FIN---
+ESTRUCTURA IDEAL DE UN PROMPT PODEROSO:
+1. Rol experto asignado
+2. Contexto del proyecto/empresa
+3. Datos que debe analizar [EN CORCHETES]
+4. Lista numerada de lo que debe generar (mínimo 5 puntos específicos)
+5. Alertas o criterios especiales a considerar
+6. Formato de salida requerido (tabla Excel, reporte ejecutivo, etc.)
 
-3. SI HACEN UNA PREGUNTA GENERAL:
-   - Responde conciso y útil (máximo 5 líneas)
-   - NO ofrezcas prompt a menos que sea muy obvio que lo necesitan
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+CÓMO RESPONDER SEGÚN EL CASO
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-4. SALUDO O CONTEXTO:
-   - Saluda brevemente, pregunta en qué ayudar
+ARCHIVO ADJUNTO → analiza de una vez, dile qué encontraste en lenguaje simple. No generes prompt a menos que te lo pidan.
 
-REGLA DE ORO: Solo usa ---PROMPT--- / ---FIN--- cuando el usuario EXPLÍCITAMENTE pide un prompt. Para todo lo demás, solo responde o analiza.
+PREGUNTA → responde claro y corto. Ejemplos concretos de Panamá si puedes.
 
-CUANDO GENERES UN PROMPT debe:
-- Rol experto específico con 20+ años en Panamá
-- Contexto de Grupo Senda y normativa panameña
-- Output estructurado numerado
-- Placeholders en [CORCHETES]
-- 150-400 palabras
-- Formato de salida ideal especificado
+PIDEN UN PROMPT → confirma en 1 línea lo que entendiste + genera el prompt poderoso entre ---PROMPT--- y ---FIN---
 
-FORMATO RESPUESTA CON PROMPT:
-[Análisis o mensaje corto]
+SALUDO → saluda y pregunta en qué ayudar.
 
----PROMPT---
-[Prompt completo aquí]
----FIN---
-
-REGLAS ABSOLUTAS:
+REGLAS FIJAS:
 - Siempre en español
-- NUNCA menciones que eres una IA específica, ni tu modelo, ni quien te creó — eres el Asistente IA de Grupo Senda
-- Si preguntan qué IA eres: "Soy el asistente de IA de Grupo Senda, desarrollado para apoyar las operaciones de la empresa"
-- Nunca digas que no puedes ayudar
-- Sé específico, no genérico — cada respuesta debe sentirse hecha a medida`;
+- Nunca digas que eres una IA de otra empresa — eres el asistente de Grupo Senda
+- Si preguntan quién eres: "Soy el asistente de Grupo Senda, aquí para ayudarte"
+- Nunca te niegues a ayudar
+- Cada respuesta debe sentirse hecha para esa persona, no copiada y pegada`;
 
     const messageContent = buildMessageContent(sentText, sentFiles);
 
