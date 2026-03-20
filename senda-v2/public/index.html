@@ -1176,24 +1176,9 @@ function handleFiles(event) {
       loaded++;
       renderFilePreviews();
 
-      // Auto-populate placeholder text if input is empty
-      const input = document.getElementById('chatInput');
-      if (!input.value.trim()) {
-        const suggestions = {
-          spreadsheet: 'Analiza este archivo y dame los insights más importantes para Grupo Senda.',
-          pdf: 'Analiza este documento y extrae la información más relevante.',
-          image: 'Analiza esta imagen y describe todo lo que ves.',
-          text: 'Analiza este archivo y dame un resumen con los puntos clave.'
-        };
-        const ftype = getFileType(file);
-        input.value = suggestions[ftype] || 'Analiza este archivo adjunto.';
-        autoResize(input);
-      }
-
-      // If all files loaded, focus input
+      // Just focus input so user can type their question
       if (loaded === total) {
-        input.focus();
-        input.select();
+        document.getElementById('chatInput').focus();
       }
     };
 
@@ -1359,28 +1344,28 @@ TU PERSONALIDAD:
 
 CÓMO RESPONDER:
 
-1. SI RECIBES UN ARCHIVO ADJUNTO (verás su contenido en el mensaje):
-   - El archivo YA ESTÁ ADJUNTO — NUNCA digas "necesito que subas el archivo" ni "para proceder adjunta el archivo"
-   - Analiza INMEDIATAMENTE y en profundidad todo lo que ves en el archivo
-   - Para PDFs: lee y extrae toda la información relevante
-   - Para Excel/CSV: analiza los datos, tablas, cifras, fechas y partidas
-   - Para imágenes: describe y analiza visualmente todo el contenido
+1. SI RECIBES UN ARCHIVO ADJUNTO:
+   - El archivo YA ESTÁ ADJUNTO — NUNCA digas "necesito que subas el archivo"
+   - Analiza INMEDIATAMENTE y en profundidad todo lo que ves
+   - PDFs: lee y extrae toda la información relevante
+   - Excel/CSV: analiza datos, tablas, cifras, fechas, partidas
+   - Imágenes: describe y analiza visualmente todo el contenido
    - Presenta análisis estructurado: hallazgos clave, alertas, inconsistencias, oportunidades
-   - Al final genera UN PROMPT PODEROSO para profundizar más
-   - USA el formato ---PROMPT--- / ---FIN--- para el prompt
+   - NO generes prompt a menos que el usuario lo pida explícitamente
 
-2. SI PIDEN UN PROMPT O TAREA ESPECÍFICA:
+2. SI PIDEN EXPLÍCITAMENTE UN PROMPT (dicen "dame un prompt", "genera un prompt", "hazme un prompt"):
    - 2-3 líneas confirmando lo que entendiste
    - Genera el mejor prompt posible
    - USA el formato ---PROMPT--- / ---FIN---
 
 3. SI HACEN UNA PREGUNTA GENERAL:
    - Responde conciso y útil (máximo 5 líneas)
-   - Ofrece generar un prompt relacionado al final
+   - NO ofrezcas prompt a menos que sea muy obvio que lo necesitan
 
 4. SALUDO O CONTEXTO:
    - Saluda brevemente, pregunta en qué ayudar
-   - Sin formato ---PROMPT---
+
+REGLA DE ORO: Solo usa ---PROMPT--- / ---FIN--- cuando el usuario EXPLÍCITAMENTE pide un prompt. Para todo lo demás, solo responde o analiza.
 
 CUANDO GENERES UN PROMPT debe:
 - Rol experto específico con 20+ años en Panamá
